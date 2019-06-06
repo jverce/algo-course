@@ -1,11 +1,7 @@
-(ns week1.prob_3)
+(ns week1.prob-3)
 
 (require '[common.utils :as u])
-
-(def edges-data
-  (eliminate-self-loops
-   (sort-by-weight
-    (u/data-loader "resources/edges.txt"))))
+(require 'clojure.set)
 
 (defn vertices [e] (set (take 2 e)))
 (defn weight [e] (nth e 2))
@@ -59,6 +55,11 @@
   [es]
   (filter #(> (count (vertices %)) 1) es))
 
-(def prob3
+(defn edges-data []
+  (eliminate-self-loops
+   (sort-by-weight
+    (u/data-loader "resources/edges.txt"))))
+
+(defn prob3 []
   (total-weight
-   (mst-computation #{(first edges-data)} (rest edges-data))))
+   (mst-computation #{(first (edges-data))} (rest (edges-data)))))

@@ -1,4 +1,4 @@
-(ns week1.prob_1_2)
+(ns week1.prob-1-2)
 
 (require '[common.utils :as u])
 
@@ -45,6 +45,6 @@
   [procs fn]
   (sort-by fn > (sort-by weight > procs)))
 
-(def procs (u/data-loader "resources/jobs.txt"))
-(def prob1 (weighted-sum (exec-time (sorted-procs procs wl-diff))))
-(def prob2 (weighted-sum (exec-time (sorted-procs procs wl-ratio))))
+(defn procs [] (u/data-loader "resources/jobs.txt"))
+(defn prob1 [] (weighted-sum (exec-time (sorted-procs (procs) wl-diff))))
+(defn prob2 [] (weighted-sum (exec-time (sorted-procs (procs) wl-ratio))))
