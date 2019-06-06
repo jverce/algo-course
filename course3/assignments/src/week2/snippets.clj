@@ -1,9 +1,10 @@
-(defn acc
-  [x]
-  (if (= x 1)
-    1
-    (+ (acc (- x 1)) x)))
+(defn find-uf
+  [sets x]
+  (first (filter #(contains? % x) sets)))
 
-(defn acc-opt
-  [x]
-  (/ (* x (+ x 1)) 2))
+(defn union-uf
+  [sets a b]
+  (set
+   (clojure.set/union
+    (filter #(and (not (contains? % a)) (not (contains? % b))) sets)
+    (list (clojure.set/union (find-uf sets a) (find-uf sets b))))))
