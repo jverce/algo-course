@@ -58,7 +58,7 @@
 (defn edges-data []
   (eliminate-self-loops
    (sort-by-weight
-    (u/data-loader "resources/edges.txt"))))
+    (u/data-loader "resources/week1/edges.txt"))))
 
 (defn prob3 []
   (total-weight

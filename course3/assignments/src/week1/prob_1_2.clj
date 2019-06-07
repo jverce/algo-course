@@ -45,6 +45,6 @@
   [procs fn]
   (sort-by fn > (sort-by weight > procs)))
 
-(defn procs [] (u/data-loader "resources/jobs.txt"))
+(defn procs [] (u/data-loader "resources/week1/jobs.txt"))
 (defn prob1 [] (weighted-sum (exec-time (sorted-procs (procs) wl-diff))))
 (defn prob2 [] (weighted-sum (exec-time (sorted-procs (procs) wl-ratio))))
