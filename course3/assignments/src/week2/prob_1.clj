@@ -23,9 +23,16 @@
   (w1p3/sort-by-weight
    (u/data-loader "resources/week2/input_completeRandom_10_32.txt")))
 
+(defn initial-cluster
+  [edges]
+  (set (map
+        #(identity #{%})
+        (into nil (w1p3/vertices-of-edge-records edges)))))
+
 (defn assoc-points
   [clusters e]
-  union-uf (:groups clusters) )
+  {:groups (apply union-uf (:groups clusters) (w1p3/vertices e))
+   :distance (w1p3/weight e)})
 
 (defn clusters
   [k]
