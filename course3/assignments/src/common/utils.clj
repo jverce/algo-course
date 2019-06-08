@@ -48,3 +48,9 @@
    (apply find-uf-complement uf xs)
    (apply clojure.set/union
           (map #(find-uf uf %) xs))))
+
+;; Creates a Union-Find structure for a given list
+;; of elements `xs`.
+(defn create-uf
+  [xs]
+  (map #(identity #{%}) xs))
