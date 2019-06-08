@@ -45,6 +45,11 @@
   [procs fn]
   (sort-by fn > (sort-by weight > procs)))
 
+;; Load input data.
 (defn procs [] (u/data-loader "resources/week1/jobs.txt"))
+
+;; Problem 1 computation.
 (defn prob1 [] (weighted-sum (exec-time (sorted-procs (procs) wl-diff))))
+
+;; Problem 2 computation.
 (defn prob2 [] (weighted-sum (exec-time (sorted-procs (procs) wl-ratio))))

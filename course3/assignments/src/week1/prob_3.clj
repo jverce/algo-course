@@ -55,11 +55,13 @@
   [es]
   (filter #(> (count (vertices %)) 1) es))
 
+;; Load input data.
 (defn edges-data []
   (eliminate-self-loops
    (sort-by-weight
     (u/data-loader "resources/week1/edges.txt"))))
 
+;; Problem 3 computation.
 (defn prob3 []
   (total-weight
    (mst-computation #{(first (edges-data))} (rest (edges-data)))))
