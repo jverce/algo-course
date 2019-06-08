@@ -23,3 +23,28 @@
   [filename]
   (map split-line-by-space-as-int (rest (read-lines filename))))
 
+;;
+;; UNION-FIND functions
+;;
+
+;; Find the subset of the input union-find `uf`
+;; that contains the element `x`.
+(defn find-uf
+  [uf x]
+  (first
+   (filter #(contains? % x) uf)))
+
+;; Given a list of elements `xs`, find all the subsets of `uf`
+;; that do not contain any of such elements.
+(defn find-uf-complement
+  [uf & xs]
+  (clojure.set/difference uf (set (map #(find-uf uf %) xs))))
+
+;; Perform a union of the subsets of `uf` that contain
+;; the elements in `xs`.
+(defn union-uf
+  [uf & xs]
+  (conj
+   (apply find-uf-complement uf xs)
+   (apply clojure.set/union
+          (map #(find-uf uf %) xs))))
