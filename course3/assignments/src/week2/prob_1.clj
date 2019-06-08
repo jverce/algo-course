@@ -1,4 +1,4 @@
-(ns week2.prob_1)
+(ns week2.prob-1)
 
 (require '[common.utils :as u])
 (require '[week1.prob-3 :as w1p3])
