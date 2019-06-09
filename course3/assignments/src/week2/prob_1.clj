@@ -3,11 +3,6 @@
 (require '[common.utils :as u]
          '[week1.prob-3 :as w1p3])
 
-;; Load input data.
-(def edges-data
-  (w1p3/sort-by-weight
-   (u/data-loader "resources/week2/clustering1.txt")))
-
 ;; Create the Union-Find structure for the input edges data.
 (defn initial-cluster
   [edges]
@@ -40,3 +35,10 @@
   (first (drop-while
          #(>= (count (:groups %)) k)
          (reductions assoc-points (initial-map edges) edges))))
+
+;; Load input data.
+(defn edges-data []
+  (w1p3/sort-by-weight
+   (u/data-loader "resources/week2/clustering1.txt")))
+
+(defn prob1 [] (:distance (clusters (edges-data) 4)))

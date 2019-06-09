@@ -5,6 +5,6 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/math.combinatorics "0.1.5"]]
-  :main ^:skip-aot week1.core
+  :main ^:skip-aot week2.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

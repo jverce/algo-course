@@ -1,5 +1,7 @@
 (ns common.utils)
 
+(require 'clojure.set)
+
 (defn parse-int
   [s]
   (Integer. (re-find #"-?\d+" s)))
