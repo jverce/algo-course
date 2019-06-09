@@ -1,8 +1,10 @@
 (ns week2.prob-2)
 
-(require '[common.utils :as u]
-         '[week1.prob-3 :as w1p3]
-         '[week2.prob-1 :as w2p1])
+(require
+ '[clojure.math.combinatorics :as combo]
+ '[common.utils :as u]
+ '[week1.prob-3 :as w1p3]
+ '[week2.prob-1 :as w2p1])
 
 ;; Load input data
 (def edges-data
@@ -35,3 +37,18 @@
 (defn create-uf-for-vertices
   [edges]
   (u/create-uf (range 0 (count edges))))
+
+;; Generate `n`-bit masks to compute Hamilton
+;; differences equal to 1.
+(defn generate-hdiff-masks-1bit
+  [n]
+  (map #(bit-shift-left 1 %) (range 0 n)))
+
+;; Generate `n`-bit masks to compute Hamilton
+;; differences equal to `d`.
+(defn generate-hdiff-masks
+  [n d]
+  (let [masks (generate-hdiff-masks-1bit n)
+        combs (filter #(apply distinct? %)
+                      (apply combo/cartesian-product (repeat d masks)))]
+    (distinct (map #(apply bit-xor (cons 0 %)) combs))))
