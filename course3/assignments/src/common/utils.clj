@@ -36,23 +36,17 @@
   (first
    (filter #(contains? % x) uf)))
 
-;; Given a list of elements `xs`, find all the subsets of `uf`
-;; that do not contain any of such elements.
-(defn find-uf-complement
-  [uf & xs]
-  (clojure.set/difference uf (set (map #(find-uf uf %) xs))))
-
 ;; Perform a union of the subsets of `uf` that contain
 ;; the elements in `xs`.
 (defn union-uf
   [uf & xs]
-  (conj
-   (apply find-uf-complement uf xs)
-   (apply clojure.set/union
-          (map #(find-uf uf %) xs))))
+  (let [grouped-sets (group-by #(empty? (clojure.set/intersection (set xs) %)) uf)]
+    (conj
+     (set (get grouped-sets true))
+     (apply clojure.set/union (get grouped-sets false)))))
 
 ;; Creates a Union-Find structure for a given list
 ;; of elements `xs`.
 (defn create-uf
   [xs]
-  (map #(identity #{%}) xs))
+  (set (map #(identity #{%}) xs)))
