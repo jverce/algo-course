@@ -33,20 +33,18 @@
 ;; that contains the element `x`.
 (defn find-uf
   [uf x]
-  (first
-   (filter #(contains? % x) uf)))
+  (get uf x))
 
 ;; Perform a union of the subsets of `uf` that contain
 ;; the elements in `xs`.
 (defn union-uf
   [uf & xs]
-  (let [grouped-sets (group-by #(empty? (clojure.set/intersection (set xs) %)) uf)]
-    (conj
-     (set (get grouped-sets true))
-     (apply clojure.set/union (get grouped-sets false)))))
+  (let [joined (apply clojure.set/union (map #(get uf %) xs))
+        kvs (mapcat #(identity [% joined]) joined)]
+    (apply assoc uf kvs)))
 
 ;; Creates a Union-Find structure for a given list
 ;; of elements `xs`.
 (defn create-uf
   [xs]
-  (set (map #(identity #{%}) xs)))
+  (reduce #(assoc %1 %2 #{%2}) {} xs))

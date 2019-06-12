@@ -6,8 +6,7 @@
 ;; Create the Union-Find structure for the input edges data.
 (defn initial-cluster
   [edges]
-  (set
-   (u/create-uf (into nil (w1p3/vertices-of-edge-records edges)))))
+  (u/create-uf (into nil (w1p3/vertices-of-edge-records edges))))
 
 ;; Creates the initial hash-map structure to use for
 ;; repetitive computations:
@@ -27,14 +26,20 @@
     {:groups new-groups
      :distance (w1p3/weight e)}))
 
+;; Compute the size of the clustering represented
+;; by the Union-Find structure `uf`.
+(defn cluster-size
+  [uf]
+  (count (distinct (vals uf))))
+
 ;; Compute the k-cluster of the list of edges `edges`.
 ;; This list must be sorted in ascending cost order for this
 ;; function to compute the max distance clustering.
 (defn clusters
   [edges k]
   (first (drop-while
-         #(>= (count (:groups %)) k)
-         (reductions assoc-points (initial-map edges) edges))))
+          #(>= (cluster-size (:groups %)) k)
+          (reductions assoc-points (initial-map edges) edges))))
 
 ;; Load input data.
 (defn edges-data []

@@ -2,7 +2,8 @@
 
 (require
  '[clojure.math.combinatorics :as combo]
- '[common.utils :as u])
+ '[common.utils :as u]
+ '[week2.prob-1 :as w2p1])
 
 ;; Transforms a list of bits (represented as `"1"` or `"0"`)
 ;; into its corresponding base 10 integer.
@@ -54,6 +55,9 @@
         combs (apply combo/cartesian-product (repeat d masks))]
     (map #(apply bit-xor (cons 0 %)) combs)))
 
+;; Returns the list of all vertices in `vxmap` that
+;; are close to the vertex with edge cost `e`. Closeness
+;; is relative to the Hamiltonian diff `masks`.
 (defn possible-near-vertices
   [e masks vxmap]
   (mapcat #(get vxmap (bit-xor e %)) masks))
@@ -80,4 +84,5 @@
                 (generate-hdiff-masks 24 2)))
         vxmap (edge-costs-to-vertices-assoc edge-costs)
         uf (create-uf-for-vertices edge-costs)]
-    (count (reduce #(merge-near-vertices %2 masks vxmap %1) uf edge-costs))))
+    (w2p1/cluster-size
+     (reduce #(merge-near-vertices %2 masks vxmap %1) uf edge-costs))))
