@@ -39,7 +39,7 @@
 ;; the elements in `xs`.
 (defn union-uf
   [uf & xs]
-  (let [joined (apply clojure.set/union (map #(find-uf %) xs))
+  (let [joined (apply clojure.set/union (map #(find-uf uf %) xs))
         kvs (mapcat #(identity [% joined]) joined)]
     (apply assoc uf kvs)))
 
