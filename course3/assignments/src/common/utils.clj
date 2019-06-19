@@ -29,22 +29,63 @@
 ;; UNION-FIND functions
 ;;
 
-;; Find the subset of the input union-find `uf`
+;; Find the root element of the input Union-Find structure `uf`
 ;; that contains the element `x`.
 (defn find-uf
   [uf x]
-  (get uf x))
+  (let [elem (get (:sets uf) x)
+        parent (:p elem)]
+    (if (= parent x) elem (find-uf uf parent))))
+
+;; Function that performs the link of 2 sets of the
+;; Union-Find structure `uf` for the input elements
+;; `x` and `y`. The function assumes that `x` and `y`
+;; are distinct root elements.
+(defn link-uf
+  [uf x y]
+  (let [x-rank (:rank x)
+        y-rank (:rank y)
+        x-val (:p x)
+        y-val (:p y)
+        sets (:sets uf)
+        size (:size uf)]
+    (assoc uf
+           :sets (cond
+                   (= x-rank y-rank) (assoc sets
+                                            x-val {:p y-val :rank x-rank}
+                                            y-val {:p y-val :rank (inc y-rank)})
+                   (> x-rank y-rank) (assoc sets
+                                            x-val {:p x-val :rank x-rank}
+                                            y-val {:p x-val :rank y-rank})
+                   (< x-rank y-rank) (assoc sets
+                                            x-val {:p y-val :rank x-rank}
+                                            y-val {:p y-val :rank y-rank}))
+           :size (dec size))))
+
+;; Basic implementation of the UNION function that takes
+;; 2 input elements `x` and `y` and performs the union
+;; in the Union-Find structure `uf`.
+(defn union-uf-basic
+  [uf x y]
+  (let [x-root (find-uf uf x)
+        y-root (find-uf uf y)]
+    (if (= x-root y-root) uf (link-uf uf x-root y-root))))
 
 ;; Perform a union of the subsets of `uf` that contain
 ;; the elements in `xs`.
 (defn union-uf
   [uf & xs]
-  (let [joined (apply clojure.set/union (map #(find-uf uf %) xs))
-        kvs (mapcat #(identity [% joined]) joined)]
-    (apply assoc uf kvs)))
+  (let [pivot (first xs)]
+    (reduce #(union-uf-basic %1 %2 pivot) uf xs)))
 
 ;; Creates a Union-Find structure for a given list
 ;; of elements `xs`.
 (defn create-uf
   [xs]
-  (reduce #(assoc %1 %2 #{%2}) {} xs))
+  {:sets (reduce #(assoc %1 %2 {:p %2 :rank 0}) {} xs)
+   :size (count xs)})
+
+;; Computes the size of the Union-Find structure `uf`.
+(defn size-uf
+  [uf]
+  (:size uf))

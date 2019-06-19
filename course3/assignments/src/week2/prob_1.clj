@@ -30,7 +30,7 @@
 ;; by the Union-Find structure `uf`.
 (defn cluster-size
   [uf]
-  (count (distinct (vals uf))))
+  (u/size-uf uf))
 
 ;; Compute the k-cluster of the list of edges `edges`.
 ;; This list must be sorted in ascending cost order for this
