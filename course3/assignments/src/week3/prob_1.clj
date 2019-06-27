@@ -19,6 +19,12 @@
         flattened-pairs (reduce concat enumerated-pairs)]
     (apply pm/priority-map flattened-pairs)))
 
+;; Get the symbol of the symbol-freq pair `sf`.
+(defn sf-symbol [sf] (nth sf 0))
+
+;; Get the frequency of the symbol-freq pair `sf`.
+(defn sf-freq [sf] (nth sf 1))
+
 ;; Takes a symbol-frequency priority-map `sfm` as an argument,
 ;; takes the 2 symbols with the smallest frequencies and merges
 ;; them together according to Huffman's algorithm.
@@ -30,8 +36,8 @@
   (let [rest (-> sfm pop pop)
         a (first sfm)
         b (first (pop sfm))
-        new-symbol (into [] '((nth a 0) (nth b 0)))
-        new-freq (+ (nth a 1) (nth b 1))]
+        new-symbol [(sf-symbol a) (sf-symbol b)]
+        new-freq (+ (sf-freq a) (sf-freq b))]
     (assoc rest new-symbol new-freq)))
 
 ;; Reduce the input symbol-frequencies priority-map `sfm`
@@ -39,5 +45,29 @@
 ;; into the map, until there are no more symbols to merge.
 (defn merge-reducer
   [sfm]
-  (println sfm)
   (if (= 1 (count sfm)) sfm (merge-reducer (merge-least-freq sfm))))
+
+;; Compute the height (either min or max, according to the `comp` function)
+;; of the tree `tree`. Trees must be expressed as nested sequences.
+(defn height
+  [tree comp]
+  (if (coll? tree)
+    (inc (apply comp (map #(height % comp) tree)))
+    0))
+
+;; Determine the maximum height of the tree `tree`.
+(defn max-height [tree] (height tree max))
+
+;; Determine the maximum height of the tree `tree`.
+(defn min-height [tree] (height tree min))
+
+;; Compute the Huffman coding for the input `data`.
+(def coding
+  (-> data
+      symbol-freq-map
+      merge-reducer
+      first
+      first))
+
+(def prob1 (max-height coding))
+(def prob2 (min-height coding))
