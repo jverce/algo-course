@@ -6,6 +6,6 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/data.priority-map "0.0.10"]
                  [org.clojure/math.combinatorics "0.1.5"]]
-  :main ^:skip-aot week2.core
+  :main ^:skip-aot week3.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
