@@ -1,4 +1,4 @@
-(ns week3.prob-1)
+(ns week3.prob-1-2)
 
 (require '[common.utils :as u]
          '[clojure.data.priority-map :as pm])
