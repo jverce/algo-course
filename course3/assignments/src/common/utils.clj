@@ -17,13 +17,18 @@
   [line]
   (map parse-int (clojure.string/split line #" ")))
 
-;; Load all the data except for the 1st line (header).
+;; Load all the data in `filename`.
+;; The `with-header` parameter (which is set to `false` by default)
+;; indicates whether the 1st line (i.e. header) should be included or not.
 ;; Each line is split by space (`\s`) in order to separate
 ;; weights from lengths.
 ;; These are then converted to integers.
 (defn data-loader
-  [filename]
-  (map split-line-by-space-as-int (rest (read-lines filename))))
+  ([filename] (data-loader filename false))
+  ([filename with-header]
+   (let [lines (read-lines filename)]
+    (map split-line-by-space-as-int
+         (if with-header lines (rest lines))))))
 
 ;;
 ;; UNION-FIND functions
