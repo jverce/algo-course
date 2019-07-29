@@ -1,12 +1,14 @@
 mod common;
+mod week1;
 
-use std::println;
-use common::utils::read_lines;
+use week1::solution::{
+    graph1,
+    graph2,
+    graph3,
+};
 
 fn main() {
-    let filename = "../res/week1/g1.txt";
-    let file_content = read_lines(filename);
-    let file_size = file_content.len();
-    println!("{}", file_size);
-    println!("{}", file_content[2][2]);
+    graph1();
+    graph2();
+    graph3();
 }
