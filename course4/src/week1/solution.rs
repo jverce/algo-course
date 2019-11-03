@@ -14,16 +14,16 @@ fn solve(filename: &str) {
 }
 
 pub fn graph1() {
-    const FILENAME: &str = "../res/week1/g1.txt";
+    const FILENAME: &str = "resources/week1/g1.txt";
     solve(FILENAME);
 }
 
 pub fn graph2() {
-    const FILENAME: &str = "../res/week1/g2.txt";
+    const FILENAME: &str = "resources/week1/g2.txt";
     solve(FILENAME);
 }
 
 pub fn graph3() {
-    const FILENAME: &str = "../res/week1/g3.txt";
+    const FILENAME: &str = "resources/week1/g3.txt";
     solve(FILENAME);
 }
