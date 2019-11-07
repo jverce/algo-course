@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{
-    BufReader,
     BufRead,
+    BufReader,
 };
 
 fn split_line(line: &str) -> Vec<&str> {

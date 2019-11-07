@@ -1,16 +1,52 @@
-use std::println;
-use std::collections::HashMap;
-use crate::common::utils::read_lines;
+use std::{
+    collections::HashMap,
+    println,
+};
+use itertools::Itertools;
 
-pub fn bellman_ford(t: u64, g: HashMap<u64, i64>) -> HashMap<u64, i64> {
-    return HashMap::new();
+use crate::common::utils;
+use crate::week1::bellman_ford;
+use crate::week1::types;
+
+fn to_edges(file_content: Vec<Vec<i64>>) -> Vec<types::Edge> {
+    return file_content[1..].iter()
+        .map(|v| types::Edge {
+            tail: v[0] as u64,
+            head: v[1] as u64,
+            weight: v[2],
+        })
+        .collect::<Vec<_>>();
+}
+
+fn edge_head(edge: &types::Edge) -> u64 {
+    return edge.head;
+}
+
+fn edge_tail(edge: &types::Edge) -> u64 {
+    return edge.tail;
+}
+
+fn to_assoc_edges(edges: &Vec<types::Edge>, group_fn: &Fn(&types::Edge) -> u64)
+    -> HashMap<u64, Vec<&types::Edge>> {
+    return edges.iter()
+        .group_by(group_fn)
+        .into_iter()
+        .map(|(k, vs)| (k, vs.into_iter().collect::<Vec<_>>()))
+        .collect::<HashMap<u64, _>>();
+}
+
+fn to_indeg_edges(edges: &Vec<types::Edge>) -> HashMap<u64, Vec<&types::Edge>> {
+    return to_assoc_edges(edges, &edge_tail);
 }
 
 fn solve(filename: &str) {
-    let file_content = read_lines(filename);
-    let file_size = file_content.len();
-    println!("{}", file_size);
-    println!("{}", file_content[2][2]);
+    let file_content = utils::read_lines(filename);
+    let edges = to_edges(file_content);
+    let indeg_edges = to_indeg_edges(&edges);
+    match indeg_edges.get(&1) {
+        Some(v) => println!("{:#?}", v),
+        None => println!("nothing"),
+    }
 }
 
 pub fn graph1() {
