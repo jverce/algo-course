@@ -35,6 +35,10 @@ fn to_indeg_edges(edges: &Vec<types::Edge>) -> HashMap<u64, Vec<&types::Edge>> {
     return to_assoc_edges(edges, &edge_tail);
 }
 
+fn to_outdeg_edges(edges: &Vec<types::Edge>) -> HashMap<u64, Vec<&types::Edge>> {
+    return to_assoc_edges(edges, &edge_head);
+}
+
 fn solve(filename: &str) {
     let file_content = utils::read_lines(filename);
     let edges = to_edges(file_content);
