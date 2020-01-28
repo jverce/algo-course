@@ -1,8 +1,5 @@
 use std::fs::File;
-use std::io::{
-    BufRead,
-    BufReader,
-};
+use std::io::{BufRead, BufReader};
 
 fn split_line(line: &str) -> Vec<&str> {
     return line.split(' ').collect();
