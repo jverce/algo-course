@@ -6,32 +6,35 @@ use std::io::{BufRead, BufReader};
 
 use crate::week1::types;
 
-fn split_line(line: &str) -> Vec<&str> {
-    return line.split(' ').collect();
+/// The `str` content in each lines is split in each space
+/// character, and each of these components is parse and
+/// transformed into an integer and put into a vector.
+fn convert_to_int_vector(line: &str) -> Vec<i64> {
+    return line.split(' ').map(|i| i.parse::<i64>().unwrap()).collect();
 }
 
-fn convert_to_int(line: &str) -> Vec<i64> {
-    let mut res: Vec<i64> = Vec::new();
-    let split: Vec<&str> = split_line(line);
-    for i in split.iter() {
-        let as_int: i64 = i.parse::<i64>().unwrap();
-        res.push(as_int);
-    }
-    return res;
-}
-
+/// Reads all the lines in the file located at `filename`,
+/// and returns these as a collection, where each item
+/// represents each line.
+/// The `str` content in each lines is split in each space
+/// character, and each of these components is put into a vector.
 pub fn read_lines(filename: &str) -> Vec<Vec<i64>> {
     let fd = File::open(filename).unwrap();
     let reader = BufReader::new(fd);
     let mut res: Vec<Vec<i64>> = Vec::new();
     for i in reader.lines() {
         let as_str: &str = &&i.unwrap();
-        let as_int_vec = convert_to_int(as_str);
+        let as_int_vec = convert_to_int_vector(as_str);
         res.push(as_int_vec);
     }
     return res;
 }
 
+/// Takes a file's content as input and produces a list
+/// of edges that represent such content.
+/// Since the file format specifies these edges, the output
+/// representation is transparent and does not perform any
+/// significant computation.
 pub fn to_edges(file_content: Vec<Vec<i64>>) -> Vec<types::Edge> {
     return file_content[1..]
         .iter()
@@ -43,10 +46,12 @@ pub fn to_edges(file_content: Vec<Vec<i64>>) -> Vec<types::Edge> {
         .collect::<Vec<_>>();
 }
 
+/// Returns the source vertex of an edge.
 pub fn edge_head(edge: &types::Edge) -> u64 {
     return edge.head;
 }
 
+/// Returns the destination vertex of an edge.
 pub fn edge_tail(edge: &types::Edge) -> u64 {
     return edge.tail;
 }
