@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -58,23 +58,28 @@ pub fn edge_tail(edge: &types::Edge) -> u64 {
 
 /// Computes and returns a table that maps vertices to a list of edges for which
 /// they are associated according to a _key getter_ function.
-/// Takes as input a list of `types::Edge`s representing a graph, as well as a
+/// Takes as input a collection of `types::Edge`s representing a graph, as well as a
 /// function (i.e. `key_getter`) that maps an `types::Edge` to a vertex.
 fn to_assoc_edges<'a>(
-    edges: &'a Vec<types::Edge>,
+    edges: &'a [types::Edge],
     key_getter: &dyn Fn(&types::Edge) -> u64,
 ) -> HashMap<u64, Vec<&'a types::Edge>> {
     return edges.iter().map(|e| (key_getter(e), e)).into_group_map();
 }
 
 /// Computes and returns a table that maps vertices to their _indegree_ edges.
-/// Takes as input a list of `types::Edge`s representing a graph.
-pub fn to_indeg_edges(edges: &Vec<types::Edge>) -> HashMap<u64, Vec<&types::Edge>> {
+/// Takes as input a collection of `types::Edge`s representing a graph.
+pub fn to_indeg_edges(edges: &[types::Edge]) -> HashMap<u64, Vec<&types::Edge>> {
     return to_assoc_edges(edges, &edge_tail);
 }
 
 /// Computes and returns a table that maps vertices to their _outdegree_ edges.
 /// Takes as input a list of `types::Edge`s representing a graph.
-pub fn to_outdeg_edges(edges: &Vec<types::Edge>) -> HashMap<u64, Vec<&types::Edge>> {
+pub fn to_outdeg_edges(edges: &[types::Edge]) -> HashMap<u64, Vec<&types::Edge>> {
     return to_assoc_edges(edges, &edge_head);
+}
+
+/// Returns the vertices of the input graph `g`.
+pub fn vertices(g: &[types::Edge]) -> HashSet<u64> {
+    return g.iter().map(|e| e.head).collect::<HashSet<u64>>();
 }

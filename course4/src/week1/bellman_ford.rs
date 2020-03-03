@@ -1,3 +1,4 @@
+use crate::common::utils::{to_indeg_edges, vertices};
 use crate::week1::types;
 use std::collections::HashMap;
 
@@ -7,6 +8,12 @@ use std::collections::HashMap;
 /// associated to it is the length of the sortest path from the
 /// vertex `s` to said destination vertex.
 pub fn solve(s: u64, g: Vec<types::Edge>) -> HashMap<u64, i64> {
-    let res: HashMap<u64, i64> = HashMap::new();
-    return res;
+    let n = g.len();
+    let vs = vertices(g.as_slice());
+    let indeg = to_indeg_edges(g.as_slice());
+    let mut result: HashMap<u64, i64> = vs.iter().map(|v| (*v, std::i64::MAX)).collect();
+
+    for _ in 0..n {}
+
+    return result;
 }

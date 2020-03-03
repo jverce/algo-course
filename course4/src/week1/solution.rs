@@ -1,12 +1,11 @@
-use crate::common::utils;
+use crate::common::utils::{read_lines, to_edges};
 use crate::week1::bellman_ford;
 
 /// Computes the solution to the problem for the file
 /// located at `filename`.
 fn solve(filename: &str) {
-    let file_content = utils::read_lines(filename);
-    let edges = utils::to_edges(file_content);
-    let indeg_edges = utils::to_indeg_edges(&edges);
+    let file_content = read_lines(filename);
+    let edges = to_edges(file_content);
     let source = 1;
     bellman_ford::solve(source, edges);
 }
