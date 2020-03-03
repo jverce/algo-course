@@ -1,6 +1,8 @@
 use crate::common::utils;
 use crate::week1::bellman_ford;
 
+/// Computes the solution to the problem for the file
+/// located at `filename`.
 fn solve(filename: &str) {
     let file_content = utils::read_lines(filename);
     let edges = utils::to_edges(file_content);
