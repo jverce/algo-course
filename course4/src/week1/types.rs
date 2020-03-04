@@ -4,3 +4,5 @@ pub struct Edge {
     pub head: u64,
     pub weight: i64,
 }
+
+pub type Graph = Vec<Edge>;

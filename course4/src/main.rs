@@ -1,10 +1,12 @@
 mod common;
 mod week1;
 
-use week1::solution::{graph1, graph2, graph3};
+use week1::solution::solve;
 
 fn main() {
-    graph1();
-    graph2();
-    graph3();
+    let result = solve();
+    match result {
+        Some(r) => println!("{}", r),
+        None => println!("NULL"),
+    };
 }

@@ -3,24 +3,31 @@ use crate::week1::bellman_ford;
 
 /// Computes the solution to the problem for the file
 /// located at `filename`.
-fn solve(filename: &str) {
+fn solve_for_file(filename: &str) -> Option<i64> {
     let file_content = read_lines(filename);
     let edges = to_edges(file_content);
     let source = 1;
-    bellman_ford::solve(source, edges);
+    let result = bellman_ford::solve(source, edges);
+
+    return match result {
+        Some(t) => t.values().into_iter().map(|i| *i).min(),
+        None => None,
+    };
 }
 
-pub fn graph1() {
-    const FILENAME: &str = "resources/week1/g1.txt";
-    solve(FILENAME);
-}
+pub fn solve() -> Option<i64> {
+    let results = vec![
+        solve_for_file("resources/week1/g1.txt"),
+        solve_for_file("resources/week1/g2.txt"),
+        solve_for_file("resources/week1/g3.txt"),
+    ];
+    let has_none = results.iter().find(|o| match o {
+        None => true,
+        _ => false,
+    });
 
-pub fn graph2() {
-    const FILENAME: &str = "resources/week1/g2.txt";
-    solve(FILENAME);
-}
-
-pub fn graph3() {
-    const FILENAME: &str = "resources/week1/g3.txt";
-    solve(FILENAME);
+    return match has_none {
+        None => results.iter().map(|o| o.unwrap()).min(),
+        _ => None,
+    };
 }

@@ -35,7 +35,7 @@ pub fn read_lines(filename: &str) -> Vec<Vec<i64>> {
 /// Since the file format specifies these edges, the output
 /// representation is transparent and does not perform any
 /// significant computation.
-pub fn to_edges(file_content: Vec<Vec<i64>>) -> Vec<types::Edge> {
+pub fn to_edges(file_content: Vec<Vec<i64>>) -> types::Graph {
     return file_content[1..]
         .iter()
         .map(|v| types::Edge {
