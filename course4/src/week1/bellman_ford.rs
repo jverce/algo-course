@@ -1,6 +1,7 @@
 use crate::common::utils::{to_indeg_edges, vertices};
 use crate::week1::types;
 use std::collections::HashMap;
+use std::i64::MAX;
 
 type ShortestPaths = HashMap<u64, i64>;
 
@@ -19,7 +20,10 @@ pub fn solve(s: u64, g: Vec<types::Edge>) -> Option<ShortestPaths> {
     let n = g.len();
     let vs = vertices(g.as_slice());
     let indeg = to_indeg_edges(g.as_slice());
-    let mut result: ShortestPaths = vs.iter().map(|v| (*v, std::i64::MAX)).collect();
+    let mut result: ShortestPaths = vs
+        .iter()
+        .map(|&v| if v == s { (v, 0) } else { (v, MAX) })
+        .collect();
 
     for _ in 1..n {
         result
