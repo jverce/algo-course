@@ -3,7 +3,7 @@ use crate::week1::bellman_ford;
 
 /// Computes the solution to the problem for the file
 /// located at `filename`.
-fn solve_for_file(filename: &str) -> Option<i64> {
+pub fn solve_for_file(filename: &str) -> Option<i64> {
     let file_content = read_lines(filename);
     let edges = to_edges(file_content);
     let source = 1;
@@ -15,7 +15,7 @@ fn solve_for_file(filename: &str) -> Option<i64> {
     };
 }
 
-pub fn solve() -> Option<i64> {
+pub fn solve() {
     let results = vec![
         solve_for_file("resources/week1/g1.txt"),
         solve_for_file("resources/week1/g2.txt"),
@@ -26,8 +26,12 @@ pub fn solve() -> Option<i64> {
         _ => false,
     });
 
-    return match has_none {
+    let result = match has_none {
         None => results.iter().map(|o| o.unwrap()).min(),
         _ => None,
+    };
+    match result {
+        Some(r) => println!("{}", r),
+        None => println!("NULL"),
     };
 }
