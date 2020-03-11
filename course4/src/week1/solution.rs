@@ -1,5 +1,8 @@
+use std::cmp::min;
+
 use crate::common::utils::{read_lines, to_edges, vertices};
 use crate::week1::bellman_ford;
+use crate::week1::types::ShortestPaths;
 
 /// Computes the solution to the problem for the file
 /// located at `filename`.
@@ -7,12 +10,23 @@ pub fn solve_for_file(filename: &str) -> Option<i64> {
     let file_content = read_lines(filename);
     let edges = to_edges(file_content);
     let sources = vertices(&edges);
-    let results = sources.map(|s| bellman_ford::solve(s, edges)).collect();
+    let results: Vec<Option<ShortestPaths>> = sources.iter().map(|s| bellman_ford::solve(*s, &edges)).collect();
 
-    return match result {
-        Some(t) => t.values().into_iter().map(|i| *i).min(),
-        None => None,
+    let mut result = None;
+    for r in results {
+        let partial_result = match r {
+            Some(t) => t.values().into_iter().map(|i| *i).min(),
+            None => None,
+        };
+
+        if partial_result.is_none() {
+            break;
+        }
+
+        result = min(result, partial_result);
     };
+
+    return result;
 }
 
 pub fn solve() {
