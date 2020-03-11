@@ -21,8 +21,8 @@ fn opt(prev: i64, indeg_prev: &[i64], indeg: &[&Edge]) -> i64 {
 /// associated to it is the length of the sortest path from the
 /// vertex `s` to said destination vertex.
 pub fn solve(s: u64, g: &Vec<Edge>) -> Option<ShortestPaths> {
-    let n = g.len();
     let vs = vertices(&g);
+    let n = vs.len();
     let empty: Vec<&Edge> = Vec::new();
     let indeg = to_indeg_edges(&g);
     let mut result: ShortestPaths = vs
