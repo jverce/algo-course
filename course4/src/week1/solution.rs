@@ -16,18 +16,10 @@ pub fn solve_for_file(filename: &str) -> Option<i64> {
     for r in results {
         let partial_result = match r {
             Some(t) => t.values().into_iter().map(|i| *i).min(),
-            None => None,
+            None => break,
         };
 
-        if partial_result.is_none() {
-            break;
-        }
-
-        if result.is_none() {
-            result = partial_result;
-        } else {
-            result = min(result, partial_result);
-        }
+        result = if result.is_none() { partial_result } else { min(result, partial_result) };
     };
 
     return result;
