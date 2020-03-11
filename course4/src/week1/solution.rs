@@ -23,7 +23,11 @@ pub fn solve_for_file(filename: &str) -> Option<i64> {
             break;
         }
 
-        result = min(result, partial_result);
+        if result.is_none() {
+            result = partial_result;
+        } else {
+            result = min(result, partial_result);
+        }
     };
 
     return result;
