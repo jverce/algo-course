@@ -35,10 +35,9 @@ pub fn solve_for_file(filename: &str) -> Option<i64> {
 
 pub fn solve() {
     let results = vec![
-        solve_for_file("resources/week1/test_cases/input_random_14_16.txt"),
-        // solve_for_file("resources/week1/g1.txt"),
-        // solve_for_file("resources/week1/g2.txt"),
-        // solve_for_file("resources/week1/g3.txt"),
+        solve_for_file("resources/week1/g1.txt"),
+        solve_for_file("resources/week1/g2.txt"),
+        solve_for_file("resources/week1/g3.txt"),
     ];
     let has_none = results.iter().find(|o| match o {
         None => true,
