@@ -4,7 +4,7 @@ use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use crate::week1::types;
+use crate::week1::types::{Edge, Graph};
 
 /// The `str` content in each lines is split in each space
 /// character, and each of these components is parse and
@@ -35,10 +35,10 @@ pub fn read_lines(filename: &str) -> Vec<Vec<i64>> {
 /// Since the file format specifies these edges, the output
 /// representation is transparent and does not perform any
 /// significant computation.
-pub fn to_edges(file_content: Vec<Vec<i64>>) -> types::Graph {
+pub fn to_edges(file_content: Vec<Vec<i64>>) -> Graph {
     return file_content[1..]
         .iter()
-        .map(|v| types::Edge {
+        .map(|v| Edge {
             tail: v[0] as u64,
             head: v[1] as u64,
             weight: v[2],
@@ -47,40 +47,40 @@ pub fn to_edges(file_content: Vec<Vec<i64>>) -> types::Graph {
 }
 
 /// Returns the source vertex of an edge.
-pub fn edge_head(edge: &types::Edge) -> u64 {
+pub fn edge_head(edge: &Edge) -> u64 {
     return edge.head;
 }
 
 /// Returns the destination vertex of an edge.
-pub fn edge_tail(edge: &types::Edge) -> u64 {
+pub fn edge_tail(edge: &Edge) -> u64 {
     return edge.tail;
 }
 
 /// Computes and returns a table that maps vertices to a list of edges for which
 /// they are associated according to a _key getter_ function.
-/// Takes as input a collection of `types::Edge`s representing a graph, as well as a
-/// function (i.e. `key_getter`) that maps an `types::Edge` to a vertex.
+/// Takes as input a collection of `Edge`s representing a graph, as well as a
+/// function (i.e. `key_getter`) that maps an `Edge` to a vertex.
 fn to_assoc_edges<'a>(
-    edges: &'a [types::Edge],
-    key_getter: &dyn Fn(&types::Edge) -> u64,
-) -> HashMap<u64, Vec<&'a types::Edge>> {
+    edges: &'a [Edge],
+    key_getter: &dyn Fn(&Edge) -> u64,
+) -> HashMap<u64, Vec<&'a Edge>> {
     return edges.iter().map(|e| (key_getter(e), e)).into_group_map();
 }
 
 /// Computes and returns a table that maps vertices to their _indegree_ edges.
-/// Takes as input a collection of `types::Edge`s representing a graph.
-pub fn to_indeg_edges(edges: &[types::Edge]) -> HashMap<u64, Vec<&types::Edge>> {
+/// Takes as input a collection of `Edge`s representing a graph.
+pub fn to_indeg_edges(edges: &[Edge]) -> HashMap<u64, Vec<&Edge>> {
     return to_assoc_edges(edges, &edge_head);
 }
 
 /// Computes and returns a table that maps vertices to their _outdegree_ edges.
-/// Takes as input a list of `types::Edge`s representing a graph.
-pub fn to_outdeg_edges(edges: &[types::Edge]) -> HashMap<u64, Vec<&types::Edge>> {
+/// Takes as input a list of `Edge`s representing a graph.
+pub fn to_outdeg_edges(edges: &[Edge]) -> HashMap<u64, Vec<&Edge>> {
     return to_assoc_edges(edges, &edge_tail);
 }
 
 /// Returns the vertices of the input graph `g`.
-pub fn vertices(g: &[types::Edge]) -> HashSet<u64> {
+pub fn vertices(g: &[Edge]) -> HashSet<u64> {
     let heads: HashSet<u64> = g.iter().map(edge_head).collect();
     let tails: HashSet<u64> = g.iter().map(edge_tail).collect();
     return heads.union(&tails).cloned().collect();
