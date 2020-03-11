@@ -70,16 +70,18 @@ fn to_assoc_edges<'a>(
 /// Computes and returns a table that maps vertices to their _indegree_ edges.
 /// Takes as input a collection of `types::Edge`s representing a graph.
 pub fn to_indeg_edges(edges: &[types::Edge]) -> HashMap<u64, Vec<&types::Edge>> {
-    return to_assoc_edges(edges, &edge_tail);
+    return to_assoc_edges(edges, &edge_head);
 }
 
 /// Computes and returns a table that maps vertices to their _outdegree_ edges.
 /// Takes as input a list of `types::Edge`s representing a graph.
 pub fn to_outdeg_edges(edges: &[types::Edge]) -> HashMap<u64, Vec<&types::Edge>> {
-    return to_assoc_edges(edges, &edge_head);
+    return to_assoc_edges(edges, &edge_tail);
 }
 
 /// Returns the vertices of the input graph `g`.
 pub fn vertices(g: &[types::Edge]) -> HashSet<u64> {
-    return g.iter().map(|e| e.head).collect::<HashSet<u64>>();
+    let heads: HashSet<u64> = g.iter().map(edge_head).collect();
+    let tails: HashSet<u64> = g.iter().map(edge_tail).collect();
+    return heads.union(&tails).cloned().collect();
 }
