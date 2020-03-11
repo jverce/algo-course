@@ -26,6 +26,7 @@ fn opt(prev: i64, indeg_prev: &[i64], indeg: &[&types::Edge]) -> i64 {
 pub fn solve(s: u64, g: Vec<types::Edge>) -> Option<ShortestPaths> {
     let n = g.len();
     let vs = vertices(&g);
+    let empty: Vec<&types::Edge> = Vec::new();
     let indeg = to_indeg_edges(&g);
     let mut result: ShortestPaths = vs
         .iter()
@@ -37,7 +38,7 @@ pub fn solve(s: u64, g: Vec<types::Edge>) -> Option<ShortestPaths> {
         result = result
             .iter()
             .map(|(k, v)| {
-                let indeg = indeg[k].as_slice();
+                let indeg = indeg.get(k).unwrap_or(&empty).as_slice();
                 let indeg_prev: Vec<i64> = indeg.iter().map(|&v| result[&v.tail]).collect();
                 return (*k, opt(*v, &indeg_prev, indeg));
             })
