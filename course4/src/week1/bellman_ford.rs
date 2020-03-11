@@ -30,21 +30,24 @@ pub fn solve(s: u64, g: &Vec<Edge>) -> Option<ShortestPaths> {
         .map(|&v| if v == s { (v, 0) } else { (v, MAX) })
         .collect();
 
-    for _ in 1..n {
-        let old_result: ShortestPaths = result.clone();
+    let mut not_finished = true;
+    for _ in 0..n {
+        not_finished = false;
         result = result
             .iter()
             .map(|(k, v)| {
                 let indeg = indeg.get(k).unwrap_or(&empty);
                 let indeg_prev: Vec<i64> = indeg.iter().map(|&v| result[&v.tail]).collect();
-                return (*k, opt(*v, &indeg_prev, indeg));
+                let new_val = opt(*v, &indeg_prev, indeg);
+                not_finished = not_finished || new_val != *v;
+                return (*k, new_val);
             })
             .collect();
 
-        if old_result == result {
+        if !not_finished {
             break;
         }
     }
 
-    return Some(result);
+    return if not_finished { None } else { Some(result) };
 }
