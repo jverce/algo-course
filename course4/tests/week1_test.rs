@@ -38,6 +38,7 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>) {
         })
         // Run tests and assertions for each test file.
         .for_each(|(input, output)| {
+            println!("Processing file {}", input);
             // Compute result for input file.
             let result = match solve_for_file(&input) {
                 Some(r) => r.to_string(),
