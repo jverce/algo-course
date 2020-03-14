@@ -3,7 +3,24 @@ use std::collections::HashMap;
 use std::i64::MAX;
 
 use crate::common::utils::{to_outdeg_edges, vertices};
-use crate::week1::types::{Graph, VertexId};
+use crate::week1::types::{Graph, ShortestPathsFW, VertexId};
+use std::borrow::BorrowMut;
+
+fn opt(path_weights: &mut ShortestPathsFW, i: VertexId, j: VertexId, k: VertexId) {
+    let key = (i, j);
+    let curr_weight = path_weights.get(&key).or(Some(&MAX)).unwrap();
+
+    let rhs_key = (i, k);
+    let rhs_weight = path_weights.get(&rhs_key).or(Some(&MAX)).unwrap();
+
+    let lhs_key = (k, j);
+    let lhs_weight = path_weights.get(&lhs_key).or(Some(&MAX)).unwrap();
+
+    let new_weight = rhs_weight.saturating_add(*lhs_weight);
+    if curr_weight > &new_weight {
+        path_weights.insert(key, new_weight);
+    }
+}
 
 /// Computes the shortest-path distances of all the pairs
 /// of vertices in the graph `g` using the Floyd-Warshall algorithm
@@ -11,11 +28,11 @@ use crate::week1::types::{Graph, VertexId};
 /// vertex **IDs** as a tuple `(s, t)`, and the value
 /// associated to it is the length of the shortest path from the
 /// vertex `s` to the destination vertex `t`.
-pub fn solve(g: &Graph) -> HashMap<(VertexId, VertexId), i64> {
+pub fn solve(g: &Graph) -> ShortestPathsFW {
     let vs = vertices(&g);
     let n = vs.len();
     let outdeg = to_outdeg_edges(&g);
-    let mut path_weights: HashMap<(VertexId, VertexId), i64> = HashMap::new();
+    let mut path_weights: ShortestPathsFW = HashMap::new();
 
     for i in 1..=n {
         let key = (i, i);
@@ -34,21 +51,9 @@ pub fn solve(g: &Graph) -> HashMap<(VertexId, VertexId), i64> {
 
     for k in 1..=n {
         for i in 1..=n {
-            for j in 1..=n {
-                let key = (i, j);
-                let curr_weight = path_weights.get(&key).or(Some(&MAX)).unwrap();
-
-                let rhs_key = (i, k);
-                let rhs_weight = path_weights.get(&rhs_key).or(Some(&MAX)).unwrap();
-
-                let lhs_key = (k, j);
-                let lhs_weight = path_weights.get(&lhs_key).or(Some(&MAX)).unwrap();
-
-                let new_weight = rhs_weight.saturating_add(*lhs_weight);
-                if curr_weight > &new_weight {
-                    path_weights.insert(key, new_weight);
-                }
-            }
+            (1..=n)
+                .into_par_iter()
+                .for_each(|j| opt(path_weights.borrow_mut(), i, j, k));
         }
     }
 
