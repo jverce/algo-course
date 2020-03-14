@@ -34,11 +34,14 @@ pub fn solve(g: &Graph) -> ShortestPathsFW {
     let outdeg = to_outdeg_edges(&g);
     let mut path_weights: ShortestPathsFW = HashMap::new();
 
+    // Initialize all vertex paths to themselves, set them to 0.
     for i in 1..=n {
         let key = (i, i);
         path_weights.insert(key, 0);
     }
 
+    // Initialize all existing direct paths from `i` to `j`.
+    // This will override all preset self-loops from above (which is good).
     for (i, edges) in outdeg {
         for e in edges {
             let key = (i, e.head);
@@ -49,6 +52,7 @@ pub fn solve(g: &Graph) -> ShortestPathsFW {
         }
     }
 
+    // Compute shortest-paths for k = 1, 2, ..., n.
     for k in 1..=n {
         for i in 1..=n {
             (1..=n)
