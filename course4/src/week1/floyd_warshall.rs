@@ -1,12 +1,12 @@
 use rayon::prelude::*;
+use std::cmp::min;
 use std::collections::HashMap;
 use std::i64::MAX;
 
 use crate::common::utils::{to_outdeg_edges, vertices};
 use crate::week1::types::{Graph, ShortestPathsFW, VertexId};
-use std::borrow::BorrowMut;
 
-fn opt(path_weights: &mut ShortestPathsFW, i: VertexId, j: VertexId, k: VertexId) {
+fn opt(path_weights: &ShortestPathsFW, i: VertexId, j: VertexId, k: VertexId) -> i64 {
     let key = (i, j);
     let curr_weight = path_weights.get(&key).or(Some(&MAX)).unwrap();
 
@@ -17,9 +17,7 @@ fn opt(path_weights: &mut ShortestPathsFW, i: VertexId, j: VertexId, k: VertexId
     let lhs_weight = path_weights.get(&lhs_key).or(Some(&MAX)).unwrap();
 
     let new_weight = rhs_weight.saturating_add(*lhs_weight);
-    if curr_weight > &new_weight {
-        path_weights.insert(key, new_weight);
-    }
+    return min(*curr_weight, new_weight);
 }
 
 /// Computes the shortest-path distances of all the pairs
@@ -55,9 +53,15 @@ pub fn solve(g: &Graph) -> ShortestPathsFW {
     // Compute shortest-paths for k = 1, 2, ..., n.
     for k in 1..=n {
         for i in 1..=n {
-            (1..=n)
+            let new_weights: Vec<i64> = (1..=n)
                 .into_par_iter()
-                .for_each(|j| opt(path_weights.borrow_mut(), i, j, k));
+                .map(|j| opt(&path_weights, i, j, k))
+                .collect();
+
+            for j in 1..=n {
+                let key = (i, j);
+                path_weights.insert(key, new_weights[j - 1]);
+            }
         }
     }
 
