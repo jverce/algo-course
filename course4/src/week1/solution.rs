@@ -3,7 +3,7 @@ use std::cmp::min;
 use std::i64::MAX;
 
 use crate::common::utils::{read_lines, to_edges, vertices};
-use crate::week1::types::ShortestPaths;
+use crate::week1::types::ShortestPathsBF;
 use crate::week1::{bellman_ford, floyd_warshall};
 
 /// Computes the solution to the problem for the file
@@ -12,7 +12,7 @@ pub fn solve_for_file_bf(filename: &str) -> Option<i64> {
     let file_content = read_lines(filename);
     let edges = to_edges(file_content);
     let sources = vertices(&edges);
-    let results: Vec<Option<ShortestPaths>> = sources
+    let results: Vec<Option<ShortestPathsBF>> = sources
         .par_iter()
         .map(|s| bellman_ford::solve(*s, &edges))
         .collect();

@@ -2,7 +2,7 @@ use std::cmp::min;
 use std::i64::MAX;
 
 use crate::common::utils::{to_indeg_edges, vertices};
-use crate::week1::types::{Edge, Graph, ShortestPaths, VertexId};
+use crate::week1::types::{Edge, Graph, ShortestPathsBF, VertexId};
 
 /// Computes the optimization function for the Bellman-Ford
 /// algorithm.
@@ -21,12 +21,12 @@ fn opt(prev: i64, indeg_prev: &[i64], indeg: &[&Edge]) -> i64 {
 /// The table is indexed by destination vertex **ID**, and the value
 /// associated to it is the length of the shortest path from the
 /// vertex `s` to said destination vertex.
-pub fn solve(s: VertexId, g: &Graph) -> Option<ShortestPaths> {
+pub fn solve(s: VertexId, g: &Graph) -> Option<ShortestPathsBF> {
     let vs = vertices(&g);
     let n = vs.len();
     let empty: Vec<&Edge> = Vec::new();
     let indeg = to_indeg_edges(&g);
-    let mut result: ShortestPaths = vs
+    let mut result: ShortestPathsBF = vs
         .iter()
         .map(|&v| if v == s { (v, 0) } else { (v, MAX) })
         .collect();

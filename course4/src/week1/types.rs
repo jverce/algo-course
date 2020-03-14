@@ -11,4 +11,5 @@ pub struct Edge {
 
 pub type Graph = Vec<Edge>;
 
-pub type ShortestPaths = HashMap<VertexId, i64>;
+pub type ShortestPathsBF = HashMap<VertexId, i64>;
+pub type ShortestPathsFW = HashMap<(VertexId, VertexId), i64>;
