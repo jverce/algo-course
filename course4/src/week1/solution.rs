@@ -1,14 +1,15 @@
 use std::cmp::min;
+use std::i64::MAX;
 
 use rayon::prelude::*;
 
 use crate::common::utils::{read_lines, to_edges, vertices};
-use crate::week1::bellman_ford;
 use crate::week1::types::ShortestPaths;
+use crate::week1::{bellman_ford, floyd_warshall};
 
 /// Computes the solution to the problem for the file
-/// located at `filename`.
-pub fn solve_for_file(filename: &str) -> Option<i64> {
+/// located at `filename` using the Bellman-Ford algorithm.
+pub fn solve_for_file_bf(filename: &str) -> Option<i64> {
     let file_content = read_lines(filename);
     let edges = to_edges(file_content);
     let sources = vertices(&edges);
@@ -34,11 +35,30 @@ pub fn solve_for_file(filename: &str) -> Option<i64> {
     return result;
 }
 
+/// Computes the solution to the problem for the file
+/// located at `filename` using the Floyd-Warshall algorithm.
+pub fn solve_for_file_fw(filename: &str) -> Option<i64> {
+    let file_content = read_lines(filename);
+    let edges = to_edges(file_content);
+    let result = floyd_warshall::solve(&edges);
+    let n = vertices(&edges).len();
+
+    for i in 1..=n {
+        let key = (i, i);
+        let val = result.get(&key).unwrap();
+        if *val != 0 {
+            return None;
+        }
+    }
+
+    return result.values().min().or(Some(&MAX)).cloned();
+}
+
 pub fn solve() {
     let results = vec![
-        solve_for_file("resources/week1/g1.txt"),
-        solve_for_file("resources/week1/g2.txt"),
-        solve_for_file("resources/week1/g3.txt"),
+        solve_for_file_bf("resources/week1/g1.txt"),
+        solve_for_file_bf("resources/week1/g2.txt"),
+        solve_for_file_bf("resources/week1/g3.txt"),
     ];
     let result = results
         .iter()

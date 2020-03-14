@@ -3,7 +3,7 @@ extern crate course4;
 #[macro_use]
 extern crate lazy_static;
 
-use course4::week1::solution::solve_for_file;
+use course4::week1::solution::{solve_for_file_bf, solve_for_file_fw};
 use regex::Regex;
 use std::fs::File;
 use std::fs::{read_dir, DirEntry};
@@ -11,7 +11,7 @@ use std::io::Result;
 use std::io::{BufRead, BufReader};
 use std::iter::Iterator;
 
-fn run_tests(files: impl Iterator<Item = Result<DirEntry>>) {
+fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> Option<i64>) {
     lazy_static! {
         static ref RE_INPUT_FILENAME: Regex =
             Regex::new(r"^input_random_(?P<id>.*)\.txt$").unwrap();
@@ -40,7 +40,7 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>) {
         .for_each(|(input, output)| {
             println!("Processing file {}", input);
             // Compute result for input file.
-            let result = match solve_for_file(&input) {
+            let result = match f(&input) {
                 Some(r) => r.to_string(),
                 None => String::from("NULL"),
             };
@@ -59,11 +59,22 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>) {
 }
 
 #[test]
-fn solution_is_computed_correctly() {
+fn solution_is_computed_correctly_bf() {
     let dir_name = "resources/week1/test_cases";
     let result = read_dir(dir_name);
     match result {
-        Ok(files) => run_tests(files),
+        Ok(files) => run_tests(files, &solve_for_file_bf),
+        Err(_) => println!("Directory not found: {}", dir_name),
+    }
+    assert_eq!(2, 2);
+}
+
+#[test]
+fn solution_is_computed_correctly_fw() {
+    let dir_name = "resources/week1/test_cases";
+    let result = read_dir(dir_name);
+    match result {
+        Ok(files) => run_tests(files, &solve_for_file_fw),
         Err(_) => println!("Directory not found: {}", dir_name),
     }
     assert_eq!(2, 2);
