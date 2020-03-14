@@ -1,7 +1,9 @@
-use crate::common::utils::{to_outdeg_edges, vertices};
-use crate::week1::types::{Graph, VertexId};
+use rayon::prelude::*;
 use std::collections::HashMap;
 use std::i64::MAX;
+
+use crate::common::utils::{to_outdeg_edges, vertices};
+use crate::week1::types::{Graph, VertexId};
 
 /// Computes the shortest-path distances of all the pairs
 /// of vertices in the graph `g` using the Floyd-Warshall algorithm

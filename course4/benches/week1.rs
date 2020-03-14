@@ -1,7 +1,8 @@
 extern crate course4;
 
-use course4::week1::solution::solve_for_file_bf;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
+
+use course4::week1::solution::solve_for_file_bf;
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("BF", |b| {

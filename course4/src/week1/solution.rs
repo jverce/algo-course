@@ -1,7 +1,6 @@
+use rayon::prelude::*;
 use std::cmp::min;
 use std::i64::MAX;
-
-use rayon::prelude::*;
 
 use crate::common::utils::{read_lines, to_edges, vertices};
 use crate::week1::types::ShortestPaths;

@@ -3,13 +3,14 @@ extern crate course4;
 #[macro_use]
 extern crate lazy_static;
 
-use course4::week1::solution::{solve_for_file_bf, solve_for_file_fw};
 use regex::Regex;
 use std::fs::File;
 use std::fs::{read_dir, DirEntry};
 use std::io::Result;
 use std::io::{BufRead, BufReader};
 use std::iter::Iterator;
+
+use course4::week1::solution::{solve_for_file_bf, solve_for_file_fw};
 
 fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> Option<i64>) {
     lazy_static! {
