@@ -1,4 +1,4 @@
-use course4::week1::solution::solve;
+use course4::week2::solution::solve;
 
 fn main() {
     solve();
