@@ -10,8 +10,8 @@ use std::io::Result;
 use std::io::{BufRead, BufReader};
 use std::iter::Iterator;
 
+use course4::common::types::Weight;
 use course4::week1::solution::{solve_for_file_bf, solve_for_file_fw};
-use course4::week1::types::Weight;
 
 fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> Option<Weight>) {
     lazy_static! {

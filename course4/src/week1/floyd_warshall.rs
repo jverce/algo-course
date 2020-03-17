@@ -3,8 +3,9 @@ use std::cmp::min_by;
 use std::collections::HashMap;
 use std::f64::MAX;
 
+use crate::common::types::{Graph, VertexId, Weight};
 use crate::common::utils::{cmp, to_outdeg_edges, vertices};
-use crate::week1::types::{Graph, ShortestPathsFW, VertexId, Weight};
+use crate::week1::types::ShortestPathsFW;
 
 fn opt(path_weights: &ShortestPathsFW, i: VertexId, j: VertexId, k: VertexId) -> Weight {
     let key = (i, j);

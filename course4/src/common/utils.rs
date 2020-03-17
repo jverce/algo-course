@@ -4,7 +4,7 @@ use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use crate::week1::types::{Edge, Graph, VertexId, Weight};
+use crate::common::types::{Edge, Graph, VertexId, Weight};
 
 /// Function that compares `PartialOrd` values and returns
 /// an `std::cmp::Ordering` result, so that it can be used in a straightforward

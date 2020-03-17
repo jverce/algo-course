@@ -1,8 +1,9 @@
 use std::cmp::min_by;
 use std::f64::MAX;
 
+use crate::common::types::{Edge, Graph, VertexId, Weight};
 use crate::common::utils::{cmp, to_indeg_edges, vertices};
-use crate::week1::types::{Edge, Graph, ShortestPathsBF, VertexId, Weight};
+use crate::week1::types::ShortestPathsBF;
 
 /// Computes the optimization function for the Bellman-Ford
 /// algorithm.

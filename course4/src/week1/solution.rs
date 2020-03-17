@@ -2,8 +2,9 @@ use rayon::prelude::*;
 use std::cmp::min_by;
 use std::f64::MAX;
 
+use crate::common::types::Weight;
 use crate::common::utils::{cmp, read_lines, to_edges, vertices};
-use crate::week1::types::{ShortestPathsBF, Weight};
+use crate::week1::types::ShortestPathsBF;
 use crate::week1::{bellman_ford, floyd_warshall};
 
 /// Computes the solution to the problem for the file
