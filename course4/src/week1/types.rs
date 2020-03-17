@@ -6,10 +6,12 @@ pub type VertexId = usize;
 pub struct Edge {
     pub tail: VertexId,
     pub head: VertexId,
-    pub weight: i64,
+    pub weight: Weight,
 }
+
+pub type Weight = f64;
 
 pub type Graph = Vec<Edge>;
 
-pub type ShortestPathsBF = HashMap<VertexId, i64>;
-pub type ShortestPathsFW = HashMap<(VertexId, VertexId), i64>;
+pub type ShortestPathsBF = HashMap<VertexId, Weight>;
+pub type ShortestPathsFW = HashMap<(VertexId, VertexId), Weight>;

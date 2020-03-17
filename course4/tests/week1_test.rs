@@ -11,8 +11,9 @@ use std::io::{BufRead, BufReader};
 use std::iter::Iterator;
 
 use course4::week1::solution::{solve_for_file_bf, solve_for_file_fw};
+use course4::week1::types::Weight;
 
-fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> Option<i64>) {
+fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> Option<Weight>) {
     lazy_static! {
         static ref RE_INPUT_FILENAME: Regex =
             Regex::new(r"^input_random_(?P<id>.*)\.txt$").unwrap();
@@ -42,7 +43,7 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> 
             println!("Processing file {}", input);
             // Compute result for input file.
             let result = match f(&input) {
-                Some(r) => r.to_string(),
+                Some(r) => (r as i64).to_string(),
                 None => String::from("NULL"),
             };
             // Read correct answer from output file.

@@ -1,17 +1,17 @@
-use std::cmp::min;
-use std::i64::MAX;
+use std::cmp::min_by;
+use std::f64::MAX;
 
-use crate::common::utils::{to_indeg_edges, vertices};
-use crate::week1::types::{Edge, Graph, ShortestPathsBF, VertexId};
+use crate::common::utils::{cmp, to_indeg_edges, vertices};
+use crate::week1::types::{Edge, Graph, ShortestPathsBF, VertexId, Weight};
 
 /// Computes the optimization function for the Bellman-Ford
 /// algorithm.
-fn opt(prev: i64, indeg_prev: &[i64], indeg: &[&Edge]) -> i64 {
+fn opt(prev: Weight, indeg_prev: &[Weight], indeg: &[&Edge]) -> Weight {
     let n_indeg = indeg_prev.len();
     let mut min_indeg = prev;
     for i in 0..n_indeg {
-        let new_cost = indeg[i].weight.saturating_add(indeg_prev[i]);
-        min_indeg = min(min_indeg, new_cost);
+        let new_cost = indeg[i].weight + indeg_prev[i];
+        min_indeg = min_by(min_indeg, new_cost, cmp);
     }
     return min_indeg;
 }
@@ -28,7 +28,7 @@ pub fn solve(s: VertexId, g: &Graph) -> Option<ShortestPathsBF> {
     let indeg = to_indeg_edges(&g);
     let mut result: ShortestPathsBF = vs
         .iter()
-        .map(|&v| if v == s { (v, 0) } else { (v, MAX) })
+        .map(|&v| if v == s { (v, 0f64) } else { (v, MAX) })
         .collect();
 
     let mut not_finished = true;
@@ -38,9 +38,9 @@ pub fn solve(s: VertexId, g: &Graph) -> Option<ShortestPathsBF> {
             .iter()
             .map(|(k, v)| {
                 let indeg = indeg.get(k).unwrap_or(&empty);
-                let indeg_prev: Vec<i64> = indeg.iter().map(|&v| result[&v.tail]).collect();
+                let indeg_prev: Vec<Weight> = indeg.iter().map(|&v| result[&v.tail]).collect();
                 let new_val = opt(*v, &indeg_prev, indeg);
-                not_finished = not_finished || new_val != *v;
+                not_finished = not_finished || new_val.ne(v);
                 return (*k, new_val);
             })
             .collect();

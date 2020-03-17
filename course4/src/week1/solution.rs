@@ -1,14 +1,14 @@
 use rayon::prelude::*;
-use std::cmp::min;
-use std::i64::MAX;
+use std::cmp::min_by;
+use std::f64::MAX;
 
-use crate::common::utils::{read_lines, to_edges, vertices};
-use crate::week1::types::ShortestPathsBF;
+use crate::common::utils::{cmp, read_lines, to_edges, vertices};
+use crate::week1::types::{ShortestPathsBF, Weight};
 use crate::week1::{bellman_ford, floyd_warshall};
 
 /// Computes the solution to the problem for the file
 /// located at `filename` using the Bellman-Ford algorithm.
-pub fn solve_for_file_bf(filename: &str) -> Option<i64> {
+pub fn solve_for_file_bf(filename: &str) -> Option<Weight> {
     let file_content = read_lines(filename);
     let edges = to_edges(file_content);
     let sources = vertices(&edges);
@@ -20,14 +20,14 @@ pub fn solve_for_file_bf(filename: &str) -> Option<i64> {
     let mut result = None;
     for r in results {
         let partial_result = match r {
-            Some(t) => t.values().into_iter().map(|i| *i).min(),
+            Some(t) => t.values().into_iter().map(|i| *i).min_by(cmp),
             None => break,
         };
 
         result = if result.is_none() {
             partial_result
         } else {
-            min(result, partial_result)
+            min_by(result, partial_result, cmp)
         };
     }
 
@@ -36,7 +36,7 @@ pub fn solve_for_file_bf(filename: &str) -> Option<i64> {
 
 /// Computes the solution to the problem for the file
 /// located at `filename` using the Floyd-Warshall algorithm.
-pub fn solve_for_file_fw(filename: &str) -> Option<i64> {
+pub fn solve_for_file_fw(filename: &str) -> Option<Weight> {
     let file_content = read_lines(filename);
     let edges = to_edges(file_content);
     let result = floyd_warshall::solve(&edges);
@@ -45,12 +45,12 @@ pub fn solve_for_file_fw(filename: &str) -> Option<i64> {
     for i in 1..=n {
         let key = (i, i);
         let val = result.get(&key).unwrap();
-        if *val != 0 {
+        if val.ne(&0f64) {
             return None;
         }
     }
 
-    return result.values().min().or(Some(&MAX)).cloned();
+    return result.values().min_by(cmp).or(Some(&MAX)).cloned();
 }
 
 pub fn solve() {
@@ -63,7 +63,7 @@ pub fn solve() {
         .iter()
         .filter(|o| o.is_some())
         .map(|o| o.unwrap())
-        .min();
+        .min_by(cmp);
 
     match result {
         Some(r) => println!("{}", r),

@@ -1,9 +1,17 @@
 use itertools::Itertools;
+use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use crate::week1::types::{Edge, Graph, VertexId};
+use crate::week1::types::{Edge, Graph, VertexId, Weight};
+
+/// Function that compares `PartialOrd` values and returns
+/// an `std::cmp::Ordering` result, so that it can be used in a straightforward
+/// manner by `std::cmp::min_by` and such.
+pub fn cmp<T: PartialOrd>(a: &T, b: &T) -> Ordering {
+    return a.partial_cmp(b).unwrap();
+}
 
 /// The `str` content in each lines is split in each space
 /// character, and each of these components is parse and
@@ -40,7 +48,7 @@ pub fn to_edges(file_content: Vec<Vec<i64>>) -> Graph {
         .map(|v| Edge {
             tail: v[0] as VertexId,
             head: v[1] as VertexId,
-            weight: v[2],
+            weight: v[2] as Weight,
         })
         .collect::<Vec<_>>();
 }
