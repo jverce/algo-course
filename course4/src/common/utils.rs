@@ -3,6 +3,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::str::FromStr;
 
 use crate::common::types::{Edge, Graph, VertexId, Weight};
 
@@ -14,10 +15,12 @@ pub fn cmp<T: PartialOrd>(a: &T, b: &T) -> Ordering {
 }
 
 /// The `str` content in each lines is split in each space
-/// character, and each of these components is parse and
-/// transformed into an integer and put into a vector.
-fn convert_to_int_vector(line: &str) -> Vec<i64> {
-    return line.split(' ').map(|i| i.parse::<i64>().unwrap()).collect();
+/// character, and each of these components is parsed and put into a vector.
+fn convert_to_num_vector<T: FromStr>(line: &str) -> Vec<T>
+where
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
+    return line.split(' ').map(|i| i.parse().unwrap()).collect();
 }
 
 /// Reads all the lines in the file located at `filename`,
@@ -25,13 +28,16 @@ fn convert_to_int_vector(line: &str) -> Vec<i64> {
 /// represents each line.
 /// The `str` content in each lines is split in each space
 /// character, and each of these components is put into a vector.
-pub fn read_lines(filename: &str) -> Vec<Vec<i64>> {
+pub fn read_lines<T: FromStr>(filename: &str) -> Vec<Vec<T>>
+where
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
     let fd = File::open(filename).unwrap();
     let reader = BufReader::new(fd);
-    let mut res: Vec<Vec<i64>> = Vec::new();
+    let mut res: Vec<Vec<T>> = Vec::new();
     for i in reader.lines() {
         let as_str: &str = &&i.unwrap();
-        let as_int_vec = convert_to_int_vector(as_str);
+        let as_int_vec = convert_to_num_vector(as_str);
         res.push(as_int_vec);
     }
     return res;
