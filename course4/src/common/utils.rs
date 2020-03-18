@@ -73,7 +73,7 @@ fn dist(a: Point<f64>, b: Point<f64>) -> f64 {
 /// between each point and use that as the weight of the edges.
 /// Vertices are arbitrarily identified by process of enumeration, starting at 1.
 pub fn to_edges_from_xy_position<T: Copy + Into<f64>>(file_content: Vec<Vec<T>>) -> Graph {
-    let pairs: Graph = file_content[1..]
+    return file_content[1..]
         .iter()
         .enumerate()
         .combinations(2)
@@ -95,7 +95,6 @@ pub fn to_edges_from_xy_position<T: Copy + Into<f64>>(file_content: Vec<Vec<T>>)
             };
         })
         .collect();
-    return pairs;
 }
 
 /// Returns the source vertex of an edge.
