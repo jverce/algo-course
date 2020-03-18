@@ -1,11 +1,10 @@
+use crate::common::types::{Edge, Graph, Point, VertexId, Weight};
 use itertools::Itertools;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::str::FromStr;
-
-use crate::common::types::{Edge, Graph, VertexId, Weight};
 
 /// Function that compares `PartialOrd` values and returns
 /// an `std::cmp::Ordering` result, so that it can be used in a straightforward
@@ -57,6 +56,46 @@ pub fn to_edges(file_content: Vec<Vec<i64>>) -> Graph {
             weight: v[2] as Weight,
         })
         .collect::<Vec<_>>();
+}
+
+/// Computes the Euclidean distance of 2 points in the
+/// `R^2` plane.
+fn dist(a: Point<f64>, b: Point<f64>) -> f64 {
+    let dx = a.x - b.x;
+    let dy = a.y - b.y;
+    return (dx.powi(2) + dy.powi(2)).sqrt();
+}
+
+/// Takes a file's content as input and produces a list
+/// of edges that represent such content.
+/// The file format specifies each vertex (X, Y) position in the plane,
+/// so this function uses that information to compute the distances
+/// between each point and use that as the weight of the edges.
+/// Vertices are arbitrarily identified by process of enumeration, starting at 1.
+pub fn to_edges_from_xy_position<T: Copy + Into<f64>>(file_content: Vec<Vec<T>>) -> Graph {
+    let pairs: Graph = file_content[1..]
+        .iter()
+        .enumerate()
+        .combinations(2)
+        .map(|p| {
+            let (u, v) = (p[0].0, p[1].0);
+            let a = Point {
+                x: p[0].1[0].into(),
+                y: p[0].1[1].into(),
+            };
+            let b = Point {
+                x: p[1].1[0].into(),
+                y: p[1].1[1].into(),
+            };
+            let weight = dist(a, b);
+            return Edge {
+                head: u,
+                tail: v,
+                weight,
+            };
+        })
+        .collect();
+    return pairs;
 }
 
 /// Returns the source vertex of an edge.

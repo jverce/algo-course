@@ -9,3 +9,9 @@ pub struct Edge {
 }
 
 pub type Graph = Vec<Edge>;
+
+/// Represents a point in the space `T^2`.
+pub struct Point<T> {
+    pub x: T,
+    pub y: T,
+}
