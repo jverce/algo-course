@@ -7,8 +7,8 @@ pub type TspResult = i64;
 
 /// Wrapper that represents operations on a set of enumerated items.
 pub trait EnumSet<T> {
-    fn add(&mut self, x: &T);
-    fn remove(&mut self, x: &T);
+    fn add(&self, x: &T) -> Self;
+    fn remove(&self, x: &T) -> Self;
     fn all(&self) -> bool;
     fn contains(&self, x: &T) -> Option<bool>;
 }
@@ -27,12 +27,16 @@ impl From<&HashSet<VertexId>> for VertexSubset {
 }
 
 impl EnumSet<VertexId> for VertexSubset {
-    fn add(&mut self, v: &VertexId) {
-        self.vertex_mask.set(*v, true);
+    fn add(&self, v: &VertexId) -> VertexSubset {
+        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        vertex_mask.set(*v, true);
+        VertexSubset { vertex_mask }
     }
 
-    fn remove(&mut self, v: &VertexId) {
-        self.vertex_mask.set(*v, false);
+    fn remove(&self, v: &VertexId) -> VertexSubset {
+        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        vertex_mask.set(*v, false);
+        VertexSubset { vertex_mask }
     }
 
     fn all(&self) -> bool {
