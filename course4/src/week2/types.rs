@@ -9,11 +9,14 @@ pub type TspResult = i64;
 pub trait EnumSet<T> {
     fn add(&self, x: &T) -> Self;
     fn remove(&self, x: &T) -> Self;
+    fn diff(&self, other: &Self) -> Self;
+    fn set_all(&self) -> Self;
     fn all(&self) -> bool;
     fn contains(&self, x: &T) -> Option<bool>;
 }
 
 /// Data type to use to refer to a subset of vertices.
+#[derive(Debug, Eq, Hash, PartialEq)]
 pub struct VertexSubset {
     vertex_mask: BitVec,
 }
@@ -36,6 +39,18 @@ impl EnumSet<VertexId> for VertexSubset {
     fn remove(&self, v: &VertexId) -> VertexSubset {
         let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
         vertex_mask.set(*v, false);
+        VertexSubset { vertex_mask }
+    }
+
+    fn diff(&self, other: &VertexSubset) -> VertexSubset {
+        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        vertex_mask.difference(&(*other).vertex_mask);
+        VertexSubset { vertex_mask }
+    }
+
+    fn set_all(&self) -> VertexSubset {
+        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        vertex_mask.set_all();
         VertexSubset { vertex_mask }
     }
 
