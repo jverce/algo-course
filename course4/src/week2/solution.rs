@@ -11,9 +11,9 @@ pub fn solve_for_file(filename: &str) -> TspResult {
     let vs = vertices(&g);
     let s = VertexSubset::from(&vs);
 
-    let curr_vertex = 1;
+    let curr_vertex = 0;
     let mut cost_accum: HashMap<(VertexSubset, VertexId), Weight> = HashMap::new();
-    cost_accum.insert((s.add(&curr_vertex), 1), 0f64);
+    cost_accum.insert((s.add(&curr_vertex), 0), 0f64);
 
     // Insert TSP algorithm here
     //        |
