@@ -71,7 +71,7 @@ fn dist(a: Point<f64>, b: Point<f64>) -> f64 {
 /// The file format specifies each vertex (X, Y) position in the plane,
 /// so this function uses that information to compute the distances
 /// between each point and use that as the weight of the edges.
-/// Vertices are arbitrarily identified by process of enumeration, starting at 1.
+/// Vertices are arbitrarily identified by process of enumeration, starting from 0.
 pub fn to_edges_from_xy_position<T: Copy + Into<f64>>(file_content: Vec<Vec<T>>) -> Graph {
     return file_content[1..]
         .iter()
