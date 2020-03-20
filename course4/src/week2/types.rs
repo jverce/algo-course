@@ -10,6 +10,7 @@ pub trait EnumSet<T> {
     fn add(&self, x: &T) -> Self;
     fn remove(&self, x: &T) -> Self;
     fn diff(&self, other: &Self) -> Self;
+    fn clear_all(&self) -> Self;
     fn set_all(&self) -> Self;
     fn all(&self) -> bool;
     fn contains(&self, x: &T) -> Option<bool>;
@@ -45,6 +46,12 @@ impl EnumSet<VertexId> for VertexSubset {
     fn diff(&self, other: &VertexSubset) -> VertexSubset {
         let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
         vertex_mask.difference(&(*other).vertex_mask);
+        VertexSubset { vertex_mask }
+    }
+
+    fn clear_all(&self) -> VertexSubset {
+        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        vertex_mask.clear();
         VertexSubset { vertex_mask }
     }
 
