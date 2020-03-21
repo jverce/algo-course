@@ -1,4 +1,4 @@
-use crate::common::types::{Edge, Graph, Point, VertexId, Weight};
+use crate::common::types::{Edge, Graph, GraphTab, Point, VertexId, Weight};
 use itertools::Itertools;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
@@ -93,6 +93,17 @@ pub fn to_edges_from_xy_position<T: Copy + Into<f64>>(file_content: Vec<Vec<T>>)
                 tail: v,
                 weight,
             };
+        })
+        .collect();
+}
+
+pub fn into_undirected_graph_tab(g: &Graph) -> GraphTab {
+    return g
+        .iter()
+        .flat_map(|e| {
+            let vertices = (e.head, e.tail);
+            let inv_vertices = (e.tail, e.head);
+            vec![(vertices, e.weight), (inv_vertices, e.weight)]
         })
         .collect();
 }

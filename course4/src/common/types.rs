@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub type VertexId = usize;
 pub type Weight = f64;
 
@@ -8,7 +10,12 @@ pub struct Edge {
     pub weight: Weight,
 }
 
+/// Canonical graph representation, as a set of edges.
 pub type Graph = Vec<Edge>;
+
+/// Tabular graph representation, that for each pair of
+/// vertices it returns the weight of the edge between them.
+pub type GraphTab = HashMap<(VertexId, VertexId), Weight>;
 
 /// Represents a point in the space `T^2`.
 pub struct Point<T> {
