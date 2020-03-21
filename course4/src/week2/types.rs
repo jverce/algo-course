@@ -17,7 +17,7 @@ pub trait EnumSet<T> {
 }
 
 /// Data type to use to refer to a subset of vertices.
-#[derive(Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct VertexSubset {
     vertex_mask: BitVec,
 }
@@ -26,37 +26,37 @@ impl From<&HashSet<VertexId>> for VertexSubset {
     fn from(vs: &HashSet<VertexId>) -> VertexSubset {
         let nbits = vs.len();
         let vertex_mask = BitVec::from_elem(nbits, false);
-        return VertexSubset { vertex_mask };
+        VertexSubset { vertex_mask }
     }
 }
 
 impl EnumSet<VertexId> for VertexSubset {
     fn add(&self, v: &VertexId) -> VertexSubset {
-        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        let mut vertex_mask = BitVec::from(self.vertex_mask.clone());
         vertex_mask.set(*v, true);
         VertexSubset { vertex_mask }
     }
 
     fn remove(&self, v: &VertexId) -> VertexSubset {
-        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        let mut vertex_mask = BitVec::from(self.vertex_mask.clone());
         vertex_mask.set(*v, false);
         VertexSubset { vertex_mask }
     }
 
     fn diff(&self, other: &VertexSubset) -> VertexSubset {
-        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
-        vertex_mask.difference(&(*other).vertex_mask);
+        let mut vertex_mask = BitVec::from(self.vertex_mask.clone());
+        vertex_mask.difference(&other.vertex_mask);
         VertexSubset { vertex_mask }
     }
 
     fn clear_all(&self) -> VertexSubset {
-        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        let mut vertex_mask = BitVec::from(self.vertex_mask.clone());
         vertex_mask.clear();
         VertexSubset { vertex_mask }
     }
 
     fn set_all(&self) -> VertexSubset {
-        let mut vertex_mask = BitVec::from((*self).vertex_mask.clone());
+        let mut vertex_mask = BitVec::from(self.vertex_mask.clone());
         vertex_mask.set_all();
         VertexSubset { vertex_mask }
     }
