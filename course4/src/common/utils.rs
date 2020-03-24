@@ -1,10 +1,13 @@
-use crate::common::types::{Edge, Graph, GraphTab, Point, VertexId, Weight};
-use itertools::Itertools;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::str::FromStr;
+
+use itertools::Itertools;
+use num::{cast, NumCast};
+
+use crate::common::types::{Edge, Graph, GraphTab, Point, VertexId, Weight};
 
 /// Function that compares `PartialOrd` values and returns
 /// an `std::cmp::Ordering` result, so that it can be used in a straightforward
@@ -47,16 +50,21 @@ where
 /// Since the file format specifies these edges, the output
 /// representation is transparent and does not perform any
 /// significant computation.
-pub fn to_edges(file_content: Vec<Vec<i64>>) -> Graph {
+pub fn to_edges<T>(file_content: Vec<Vec<T>>) -> Graph
+where
+    T: Clone + NumCast,
+{
     return file_content[1..]
         .iter()
         .map(|v| Edge {
-            tail: v[0] as VertexId,
-            head: v[1] as VertexId,
-            weight: v[2] as Weight,
+            tail: cast(v[0].clone()).unwrap(),
+            head: cast(v[1].clone()).unwrap(),
+            weight: cast(v[2].clone()).unwrap(),
         })
         .collect::<Vec<_>>();
 }
+
+pub fn to_points() {}
 
 /// Computes the Euclidean distance of 2 points in the
 /// `R^2` plane.
@@ -72,7 +80,7 @@ fn dist(a: Point<f64>, b: Point<f64>) -> f64 {
 /// so this function uses that information to compute the distances
 /// between each point and use that as the weight of the edges.
 /// Vertices are arbitrarily identified by process of enumeration, starting from 0.
-pub fn to_edges_from_xy_position<T: Copy + Into<f64>>(file_content: Vec<Vec<T>>) -> Graph {
+pub fn to_edges_from_xy_position<T: Copy + Into<Weight>>(file_content: Vec<Vec<T>>) -> Graph {
     return file_content[1..]
         .iter()
         .enumerate()

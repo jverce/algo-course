@@ -1,6 +1,7 @@
-use rayon::prelude::*;
 use std::cmp::min_by;
 use std::f64::MAX;
+
+use rayon::prelude::*;
 
 use crate::common::types::Weight;
 use crate::common::utils::{cmp, read_lines, to_edges, vertices};
@@ -10,7 +11,7 @@ use crate::week1::{bellman_ford, floyd_warshall};
 /// Computes the solution to the problem for the file
 /// located at `filename` using the Bellman-Ford algorithm.
 pub fn solve_for_file_bf(filename: &str) -> Option<Weight> {
-    let file_content = read_lines(filename);
+    let file_content: Vec<Vec<i64>> = read_lines(filename);
     let edges = to_edges(file_content);
     let sources = vertices(&edges);
     let results: Vec<Option<ShortestPathsBF>> = sources
@@ -38,7 +39,7 @@ pub fn solve_for_file_bf(filename: &str) -> Option<Weight> {
 /// Computes the solution to the problem for the file
 /// located at `filename` using the Floyd-Warshall algorithm.
 pub fn solve_for_file_fw(filename: &str) -> Option<Weight> {
-    let file_content = read_lines(filename);
+    let file_content: Vec<Vec<i64>> = read_lines(filename);
     let edges = to_edges(file_content);
     let result = floyd_warshall::solve(&edges);
     let n = vertices(&edges).len();
