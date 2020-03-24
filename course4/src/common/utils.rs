@@ -7,7 +7,7 @@ use std::str::FromStr;
 use itertools::Itertools;
 use num::{cast, NumCast};
 
-use crate::common::types::{Edge, Graph, GraphTab, Point, VertexId, Weight};
+use crate::common::types::{Edge, Graph, GraphTab, Point, PointVertex, VertexId, Weight};
 
 /// Function that compares `PartialOrd` values and returns
 /// an `std::cmp::Ordering` result, so that it can be used in a straightforward
@@ -64,7 +64,23 @@ where
         .collect::<Vec<_>>();
 }
 
-pub fn to_points() {}
+pub fn to_points<T>(file_content: Vec<Vec<T>>) -> PointVertex<T>
+where
+    T: Clone + NumCast,
+{
+    return file_content[1..]
+        .iter()
+        .enumerate()
+        .map(|(i, v)| {
+            let vertex_id = i;
+            let point = Point {
+                x: cast(v[0].clone()).unwrap(),
+                y: cast(v[1].clone()).unwrap(),
+            };
+            return (vertex_id, point);
+        })
+        .collect();
+}
 
 /// Computes the Euclidean distance of 2 points in the
 /// `R^2` plane.

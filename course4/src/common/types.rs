@@ -18,7 +18,10 @@ pub type Graph = Vec<Edge>;
 pub type GraphTab = HashMap<(VertexId, VertexId), Weight>;
 
 /// Represents a point in the space `T^2`.
+#[derive(Debug)]
 pub struct Point<T> {
     pub x: T,
     pub y: T,
 }
+
+pub type PointVertex<T> = Vec<(VertexId, Point<T>)>;
