@@ -97,6 +97,11 @@ pub fn to_edges_from_xy_position<T: Copy + Into<f64>>(file_content: Vec<Vec<T>>)
         .collect();
 }
 
+/// Transform a `Graph` instance (which is baiscally a collection of `Edge`s)
+/// into a table of type `GraphTab`, which is indexed by a pair of vertices and for which
+/// its value is the weight of the edge that unites them (if there's an edge that in fact
+/// unites them). This table assumes that the input graph is undirected, and so the table is
+/// symmetric with respect to the order of the vertices in the pair used to index it.
 pub fn into_undirected_graph_tab(g: &Graph) -> GraphTab {
     return g
         .iter()
