@@ -72,10 +72,7 @@ where
         .iter()
         .enumerate()
         .map(|(i, v)| {
-            let point = Point {
-                x: cast(v[0].clone()).unwrap(),
-                y: cast(v[1].clone()).unwrap(),
-            };
+            let point = vec![cast(v[0].clone()).unwrap(), cast(v[1].clone()).unwrap()];
             let id = i;
             PointVertex { point, id }
         })
@@ -83,11 +80,14 @@ where
 }
 
 /// Computes the Euclidean distance of 2 points in the
-/// `R^2` plane.
+/// `R^N` plane.
 fn dist(a: Point<f64>, b: Point<f64>) -> f64 {
-    let dx = a.x - b.x;
-    let dy = a.y - b.y;
-    return (dx.powi(2) + dy.powi(2)).sqrt();
+    a.iter()
+        .zip(b.iter())
+        .map(|(&a, &b)| a - b)
+        .map(|x| x.powi(2))
+        .fold(0f64, |accum, x| accum + x)
+        .sqrt()
 }
 
 /// Takes a file's content as input and produces a list
@@ -103,14 +103,8 @@ pub fn to_edges_from_xy_position<T: Copy + Into<Weight>>(file_content: Vec<Vec<T
         .combinations(2)
         .map(|p| {
             let (u, v) = (p[0].0, p[1].0);
-            let a = Point {
-                x: p[0].1[0].into(),
-                y: p[0].1[1].into(),
-            };
-            let b = Point {
-                x: p[1].1[0].into(),
-                y: p[1].1[1].into(),
-            };
+            let a = vec![p[0].1[0].into(), p[0].1[1].into()];
+            let b = vec![p[1].1[0].into(), p[1].1[1].into()];
             let weight = dist(a, b);
             return Edge {
                 head: u,

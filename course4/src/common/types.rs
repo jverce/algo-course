@@ -17,12 +17,8 @@ pub type Graph = Vec<Edge>;
 /// vertices it returns the weight of the edge between them.
 pub type GraphTab = HashMap<(VertexId, VertexId), Weight>;
 
-/// Represents a point in the space `T^2`.
-#[derive(Debug)]
-pub struct Point<T> {
-    pub x: T,
-    pub y: T,
-}
+/// Represents a point in the space `T^N`.
+pub type Point<T> = Vec<T>;
 
 pub struct PointVertex<T> {
     pub point: Point<T>,
