@@ -1,3 +1,4 @@
+use kdtree::kdtree::KdtreePointTrait;
 use std::collections::HashMap;
 
 pub type VertexId = usize;
@@ -24,7 +25,17 @@ pub struct Point<T> {
     pub y: T,
 }
 
+#[derive(Copy, Clone, Debug, PartialOrd, PartialEq)]
 pub struct PointVertex<T> {
-    pub point: Point<T>,
     pub id: VertexId,
+    pub point: [T; 2],
+}
+
+pub type Real = f64;
+
+impl KdtreePointTrait for PointVertex<Real> {
+    #[inline]
+    fn dims(&self) -> &[Real] {
+        &self.point
+    }
 }
