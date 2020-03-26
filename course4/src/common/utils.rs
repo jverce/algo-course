@@ -72,9 +72,12 @@ where
         .iter()
         .enumerate()
         .map(|(i, v)| {
+            let point = Point {
+                x: cast(v[0].clone()).unwrap(),
+                y: cast(v[1].clone()).unwrap(),
+            };
             let id = i;
-            let point = [cast(v[0].clone()).unwrap(), cast(v[1].clone()).unwrap()];
-            PointVertex { id, point }
+            PointVertex { point, id }
         })
         .collect();
 }
