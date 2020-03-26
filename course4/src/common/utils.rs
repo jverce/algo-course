@@ -64,7 +64,7 @@ where
         .collect::<Vec<_>>();
 }
 
-pub fn to_points<T>(file_content: Vec<Vec<T>>) -> PointVertex<T>
+pub fn to_points<T>(file_content: Vec<Vec<T>>) -> Vec<PointVertex<T>>
 where
     T: Clone + NumCast,
 {
@@ -72,12 +72,12 @@ where
         .iter()
         .enumerate()
         .map(|(i, v)| {
-            let vertex_id = i;
             let point = Point {
                 x: cast(v[0].clone()).unwrap(),
                 y: cast(v[1].clone()).unwrap(),
             };
-            return (vertex_id, point);
+            let id = i;
+            PointVertex { point, id }
         })
         .collect();
 }

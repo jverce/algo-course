@@ -24,4 +24,7 @@ pub struct Point<T> {
     pub y: T,
 }
 
-pub type PointVertex<T> = Vec<(VertexId, Point<T>)>;
+pub struct PointVertex<T> {
+    pub point: Point<T>,
+    pub id: VertexId,
+}

@@ -1,4 +1,3 @@
-use crate::common::types::Weight;
 use crate::common::utils::{read_lines, to_points};
 use crate::week2::types::TspResult;
 
