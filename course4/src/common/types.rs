@@ -1,5 +1,7 @@
+use generic_array::{ArrayLength, GenericArray};
 use spade::{PointN, SpadeNum, TwoDimensional};
 use std::collections::HashMap;
+use std::fmt::Debug;
 
 pub type VertexId = usize;
 pub type Weight = f64;
@@ -19,31 +21,32 @@ pub type Graph = Vec<Edge>;
 pub type GraphTab = HashMap<(VertexId, VertexId), Weight>;
 
 /// Represents a point in the space `T^N`.
-pub type Point<T> = Vec<T>;
+pub type Point<T, N> = GenericArray<T, N>;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
-pub struct PointVertex<T> {
-    pub point: Point<T>,
+/// Represents a labeled vertex located at point in the space `T^N`.
+pub struct PointVertex<T, N>
+where
+    N: ArrayLength<T>,
+{
+    pub point: Point<T, N>,
     pub id: VertexId,
 }
 
-impl<T> PointN for PointVertex<T>
+impl<T, N> PointN for PointVertex<T, N>
 where
     T: SpadeNum,
+    N: ArrayLength<T> + Clone + Debug + PartialEq + PartialOrd,
 {
     type Scalar = T;
 
     fn dimensions() -> usize {
-        // I know Rust will someday have non-type template parameters.
-        // In the mean-time, I'm hard-coding this.
-        2
+        N::USIZE
     }
 
     fn from_value(value: Self::Scalar) -> Self {
-        // I know Rust will someday have non-type template parameters.
-        // In the mean-time, I have to build a fixed-size vector like this :(
-        let point = vec![value.clone(), value.clone()];
         let id = 0;
+        let point = (0..N::USIZE).map(|_| value.clone()).collect();
         PointVertex { id, point }
     }
 
@@ -56,4 +59,9 @@ where
     }
 }
 
-impl<T> TwoDimensional for PointVertex<T> where T: SpadeNum {}
+impl<T, N> TwoDimensional for PointVertex<T, N>
+where
+    T: SpadeNum,
+    N: ArrayLength<T> + Clone + Debug + PartialEq + PartialOrd,
+{
+}

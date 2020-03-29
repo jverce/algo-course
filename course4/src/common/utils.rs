@@ -1,13 +1,12 @@
+use crate::common::types::{Edge, Graph, GraphTab, Point, PointVertex, VertexId, Weight};
+use generic_array::{arr, sequence::GenericSequence, ArrayLength, GenericArray};
+use itertools::Itertools;
+use num::{cast, Num, NumCast};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::str::FromStr;
-
-use itertools::Itertools;
-use num::{cast, NumCast};
-
-use crate::common::types::{Edge, Graph, GraphTab, Point, PointVertex, VertexId, Weight};
 
 /// Function that compares `PartialOrd` values and returns
 /// an `std::cmp::Ordering` result, so that it can be used in a straightforward
@@ -64,30 +63,38 @@ where
         .collect::<Vec<_>>();
 }
 
-pub fn to_points<T>(file_content: Vec<Vec<T>>) -> Vec<PointVertex<T>>
+pub fn to_points<T, N>(file_content: Vec<Vec<T>>) -> Vec<PointVertex<T, N>>
 where
-    T: Clone + NumCast,
+    T: Copy,
+    N: ArrayLength<T>,
 {
-    return file_content[1..]
+    file_content[1..]
         .iter()
         .enumerate()
         .map(|(i, v)| {
-            let point = vec![cast(v[0].clone()).unwrap(), cast(v[1].clone()).unwrap()];
+            let point = GenericArray::generate(|i| v[i].clone());
             let id = i;
             PointVertex { point, id }
         })
-        .collect();
+        .collect()
 }
 
 /// Computes the Euclidean distance of 2 points in the
 /// `R^N` plane.
-fn dist(a: Point<f64>, b: Point<f64>) -> f64 {
-    a.iter()
-        .zip(b.iter())
-        .map(|(&a, &b)| a - b)
-        .map(|x| x.powi(2))
-        .fold(0f64, |accum, x| accum + x)
-        .sqrt()
+fn dist<T, N>(a: Point<T, N>, b: Point<T, N>) -> f64
+where
+    T: Copy + Num + NumCast,
+    N: ArrayLength<T>,
+{
+    cast::<T, f64>(
+        a.iter()
+            .zip(b.iter())
+            .map(|(&a, &b)| a - b)
+            .map(|x| x * x)
+            .fold(T::zero(), |accum, x| accum + x),
+    )
+    .unwrap()
+    .sqrt()
 }
 
 /// Takes a file's content as input and produces a list
@@ -96,15 +103,18 @@ fn dist(a: Point<f64>, b: Point<f64>) -> f64 {
 /// so this function uses that information to compute the distances
 /// between each point and use that as the weight of the edges.
 /// Vertices are arbitrarily identified by process of enumeration, starting from 0.
-pub fn to_edges_from_xy_position<T: Copy + Into<Weight>>(file_content: Vec<Vec<T>>) -> Graph {
-    return file_content[1..]
+pub fn to_edges_from_xy_position<T>(file_content: Vec<Vec<T>>) -> Graph
+where
+    T: Copy + Into<Weight>,
+{
+    file_content[1..]
         .iter()
         .enumerate()
         .combinations(2)
         .map(|p| {
             let (u, v) = (p[0].0, p[1].0);
-            let a = vec![p[0].1[0].into(), p[0].1[1].into()];
-            let b = vec![p[1].1[0].into(), p[1].1[1].into()];
+            let a = arr![Weight; p[0].1[0].into(), p[0].1[1].into()];
+            let b = arr![Weight; p[1].1[0].into(), p[1].1[1].into()];
             let weight = dist(a, b);
             return Edge {
                 head: u,
@@ -112,7 +122,7 @@ pub fn to_edges_from_xy_position<T: Copy + Into<Weight>>(file_content: Vec<Vec<T
                 weight,
             };
         })
-        .collect();
+        .collect()
 }
 
 /// Transform a `Graph` instance (which is baiscally a collection of `Edge`s)
