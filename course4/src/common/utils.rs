@@ -51,7 +51,7 @@ where
 /// significant computation.
 pub fn to_edges<T>(file_content: Vec<Vec<T>>) -> Graph
 where
-    T: Clone + NumCast,
+    T: Copy + NumCast,
 {
     return file_content[1..]
         .iter()

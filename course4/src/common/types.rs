@@ -5,6 +5,7 @@ use std::fmt::Debug;
 
 pub type VertexId = usize;
 pub type Weight = f64;
+pub type Real = f64;
 
 #[derive(Debug)]
 pub struct Edge {
@@ -23,7 +24,7 @@ pub type GraphTab = HashMap<(VertexId, VertexId), Weight>;
 /// Represents a point in the space `T^N`.
 pub type Point<T, N> = GenericArray<T, N>;
 
-#[derive(Clone, Debug, PartialEq, PartialOrd)]
+#[derive(Copy, Debug, PartialEq, PartialOrd)]
 /// Represents a labeled vertex located at point in the space `T^N`.
 pub struct PointVertex<T, N>
 where
@@ -36,7 +37,7 @@ where
 impl<T, N> PointN for PointVertex<T, N>
 where
     T: SpadeNum,
-    N: ArrayLength<T> + Clone + Debug + PartialEq + PartialOrd,
+    N: ArrayLength<T> + Copy + Debug + PartialEq + PartialOrd,
 {
     type Scalar = T;
 
@@ -62,6 +63,6 @@ where
 impl<T, N> TwoDimensional for PointVertex<T, N>
 where
     T: SpadeNum,
-    N: ArrayLength<T> + Clone + Debug + PartialEq + PartialOrd,
+    N: ArrayLength<T> + Copy + Debug + PartialEq + PartialOrd,
 {
 }
