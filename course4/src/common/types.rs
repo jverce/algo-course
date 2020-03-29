@@ -64,6 +64,16 @@ where
     }
 }
 
+impl<T, N> Ord for PointVertex<T, N>
+where
+    T: SpadeNum,
+    N: ArrayLength<T>,
+{
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.id.cmp(&other.id)
+    }
+}
+
 impl<T, N> Hash for PointVertex<T, N>
 where
     T: SpadeNum,
