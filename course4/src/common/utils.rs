@@ -2,6 +2,7 @@ use crate::common::types::{Edge, Graph, GraphTab, Point, PointVertex, VertexId, 
 use generic_array::{arr, sequence::GenericSequence, ArrayLength, GenericArray};
 use itertools::Itertools;
 use num::{cast, Num, NumCast};
+use spade::SpadeNum;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
@@ -65,7 +66,7 @@ where
 
 pub fn to_points<T, N>(file_content: Vec<Vec<T>>) -> Vec<PointVertex<T, N>>
 where
-    T: Copy,
+    T: SpadeNum,
     N: ArrayLength<T>,
 {
     file_content[1..]
@@ -81,7 +82,7 @@ where
 
 /// Computes the Euclidean distance of 2 points in the
 /// `R^N` plane.
-fn dist<T, N>(a: Point<T, N>, b: Point<T, N>) -> f64
+pub fn dist<T, N>(a: Point<T, N>, b: Point<T, N>) -> f64
 where
     T: Copy + Num + NumCast,
     N: ArrayLength<T>,
