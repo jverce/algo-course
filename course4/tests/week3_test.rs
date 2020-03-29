@@ -3,8 +3,8 @@ extern crate course4;
 #[macro_use]
 extern crate lazy_static;
 
-use course4::common::types::Weight;
-use course4::week1::solution::{solve_for_file_bf, solve_for_file_fw};
+use course4::common::types::TspResult;
+use course4::week3::solution::solve_for_file;
 use regex::Regex;
 use std::fs::File;
 use std::fs::{read_dir, DirEntry};
@@ -12,12 +12,11 @@ use std::io::Result;
 use std::io::{BufRead, BufReader};
 use std::iter::Iterator;
 
-const TEST_CASES_DIR: &str = "resources/week1/test_cases";
+const TEST_CASES_DIR: &str = "resources/week3/test_cases";
 
-fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> Option<Weight>) {
+fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> TspResult) {
     lazy_static! {
-        static ref RE_INPUT_FILENAME: Regex =
-            Regex::new(r"^input_random_(?P<id>.*)\.txt$").unwrap();
+        static ref RE_INPUT_FILENAME: Regex = Regex::new(r"^input_(?P<id>.*)\.txt$").unwrap();
     }
 
     files
@@ -28,8 +27,7 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> 
         // Transform into tuples with the format: (input file name, output file name).
         .map(|f| {
             let input = String::from(f);
-            let output =
-                String::from(RE_INPUT_FILENAME.replace_all(&input, "output_random_$id.txt"));
+            let output = String::from(RE_INPUT_FILENAME.replace_all(&input, "output_$id.txt"));
             return (input, output);
         })
         // Append the containing directory to each file name.
@@ -42,10 +40,7 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> 
         .for_each(|(input, output)| {
             println!("Processing file {}", input);
             // Compute result for input file.
-            let result = match f(&input) {
-                Some(r) => (r as i64).to_string(),
-                None => String::from("NULL"),
-            };
+            let result = f(&input).to_string();
             // Read correct answer from output file.
             let ofd = File::open(output).unwrap();
             let reader = BufReader::new(ofd);
@@ -61,19 +56,10 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> 
 }
 
 #[test]
-fn solution_is_computed_correctly_bf() {
+fn solution_is_computed_correctly_tsp_heuristic() {
     let result = read_dir(TEST_CASES_DIR);
     match result {
-        Ok(files) => run_tests(files, &solve_for_file_bf),
-        Err(_) => println!("Directory not found: {}", TEST_CASES_DIR),
-    }
-}
-
-#[test]
-fn solution_is_computed_correctly_fw() {
-    let result = read_dir(TEST_CASES_DIR);
-    match result {
-        Ok(files) => run_tests(files, &solve_for_file_fw),
+        Ok(files) => run_tests(files, &solve_for_file),
         Err(_) => println!("Directory not found: {}", TEST_CASES_DIR),
     }
 }

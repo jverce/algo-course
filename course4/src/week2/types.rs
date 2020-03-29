@@ -1,9 +1,6 @@
 use crate::common::types::VertexId;
 use std::collections::HashSet;
 
-/// Data type to represent the expected output of this week's assignment.
-pub type TspResult = i64;
-
 /// Wrapper that represents operations on a set of enumerated items.
 pub trait EnumSet<T> {
     fn new() -> Self;

@@ -106,3 +106,6 @@ where
     N: ArrayLength<T> + Copy + Debug + PartialEq + PartialOrd,
 {
 }
+
+/// Data type to represent the expected output of this week's assignment.
+pub type TspResult = i64;

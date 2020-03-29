@@ -1,8 +1,8 @@
-use crate::common::types::{VertexId, Weight};
+use crate::common::types::{TspResult, VertexId, Weight};
 use crate::common::utils::{
     cmp, into_undirected_graph_tab, read_lines, to_edges_from_xy_position, vertices,
 };
-use crate::week2::types::{EnumSet, TspResult, VertexSubset};
+use crate::week2::types::{EnumSet, VertexSubset};
 use itertools::Itertools;
 use rayon::prelude::*;
 use std::collections::HashMap;

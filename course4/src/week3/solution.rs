@@ -1,6 +1,5 @@
-use crate::common::types::{PointVertex, Real};
+use crate::common::types::{PointVertex, Real, TspResult};
 use crate::common::utils::{dist, read_lines, to_points};
-use crate::week2::types::TspResult;
 use spade::rtree::RTree;
 use typenum::U2;
 

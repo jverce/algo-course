@@ -3,15 +3,14 @@ extern crate course4;
 #[macro_use]
 extern crate lazy_static;
 
+use course4::common::types::TspResult;
+use course4::week2::solution::solve_for_file;
 use regex::Regex;
 use std::fs::File;
 use std::fs::{read_dir, DirEntry};
 use std::io::Result;
 use std::io::{BufRead, BufReader};
 use std::iter::Iterator;
-
-use course4::week2::solution::solve_for_file;
-use course4::week2::types::TspResult;
 
 const TEST_CASES_DIR: &str = "resources/week2/test_cases";
 
