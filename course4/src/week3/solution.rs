@@ -11,11 +11,11 @@ pub fn solve_for_file(filename: &str) -> TspResult {
 
     let mut result = 0f64;
     let mut prev = home_vertex.clone();
-    let mut nn;
     rtree.remove(&prev);
     while rtree.size() != 0 {
-        nn = rtree.nearest_neighbor(&prev).unwrap();
-        result = result + dist(prev.point, (*nn).point.clone());
+        let nn = rtree.nearest_neighbor(&prev).unwrap();
+        result += dist(prev.point, nn.point);
+
         prev = (*nn).clone();
         rtree.remove(&prev);
     }
