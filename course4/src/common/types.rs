@@ -24,7 +24,7 @@ pub type GraphTab = HashMap<(VertexId, VertexId), Weight>;
 /// Represents a point in the space `T^N`.
 pub type Point<T, N> = GenericArray<T, N>;
 
-#[derive(Copy, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 /// Represents a labeled vertex located at point in the space `T^N`.
 pub struct PointVertex<T, N>
 where
