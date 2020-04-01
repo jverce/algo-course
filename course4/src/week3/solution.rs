@@ -13,7 +13,9 @@ pub fn solve_for_file(filename: &str) -> TspResult {
     let mut prev = home_vertex.clone();
     rtree.remove(&prev);
     while rtree.size() != 0 {
-        let nn = rtree.nearest_neighbor(&prev).unwrap();
+        let mut nns = rtree.nearest_neighbors(&prev);
+        nns.sort();
+        let nn = nns.iter().nth(0).unwrap();
         result += dist(prev.point, nn.point);
 
         prev = (*nn).clone();
