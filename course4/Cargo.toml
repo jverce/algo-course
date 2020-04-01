@@ -12,7 +12,7 @@ lazy_static = "1.4.0"
 num = "0.2.1"
 rayon = "1.1"
 regex = "1"
-spade = "1.8.1"
+spade = { git = "https://github.com/jverce/spade.git" }
 typenum = "1.11.2"
 
 [[bench]]
