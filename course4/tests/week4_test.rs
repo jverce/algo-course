@@ -3,7 +3,7 @@ extern crate course4;
 #[macro_use]
 extern crate lazy_static;
 
-use course4::common::types::TspResult;
+use course4::week4::solution::solve_for_file;
 use regex::Regex;
 use std::fs::File;
 use std::fs::{read_dir, DirEntry};
@@ -13,7 +13,7 @@ use std::iter::Iterator;
 
 const TEST_CASES_DIR: &str = "resources/week4/test_cases";
 
-fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> TspResult) {
+fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> bool) {
     lazy_static! {
         static ref RE_INPUT_FILENAME: Regex = Regex::new(r"^input_(?P<id>.*)\.txt$").unwrap();
     }
@@ -39,7 +39,7 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> 
         .for_each(|(input, output)| {
             println!("Processing file {}", input);
             // Compute result for input file.
-            let result = f(&input).to_string();
+            let result = (f(&input) as i32).to_string();
             // Read correct answer from output file.
             let ofd = File::open(output).unwrap();
             let reader = BufReader::new(ofd);
@@ -58,7 +58,7 @@ fn run_tests(files: impl Iterator<Item = Result<DirEntry>>, f: &dyn Fn(&str) -> 
 fn solution_is_computed_correctly_2sat() {
     let result = read_dir(TEST_CASES_DIR);
     match result {
-        Ok(files) => println!("No tests yet"),
+        Ok(files) => run_tests(files, &solve_for_file),
         Err(_) => println!("Directory not found: {}", TEST_CASES_DIR),
     }
 }
