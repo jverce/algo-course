@@ -1,14 +1,23 @@
 use itertools::Itertools;
 
 use crate::common::utils::read_lines;
-use crate::week4::types::{BitSet, BitVec};
+use crate::week4::types::{BitSet, BitVec, Evaluable, ExprFull};
 
 pub fn solve_for_file(filename: &str) -> bool {
-    let file_contents: Vec<Vec<i64>> = read_lines(filename);
+    let mut file_contents: Vec<Vec<i64>> = read_lines(filename);
     let n_bits = file_contents[0][0].clone() as usize;
     let candidate: BitVec = BitSet::new(n_bits);
 
-    return false;
+    // Remove the first item of the file contents, which is irrelevant to the logical expression
+    // for which the 2-SAT must be evaluated.
+    file_contents.remove(0);
+    let expr = ExprFull::new(&file_contents);
+
+    //
+    // ----> Insert algorithm here <----
+    //
+
+    expr.eval(&candidate)
 }
 
 pub fn solve() {
