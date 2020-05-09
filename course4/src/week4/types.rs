@@ -1,4 +1,5 @@
 use num::abs;
+use rand::seq::{IteratorRandom, SliceRandom};
 
 /// Wrapper that represents operations on a set of bits.
 pub trait BitSet {
@@ -70,7 +71,7 @@ pub struct ExprVal {
 /// This struct represents the evaluation of 2 single expressions, or'ed together.
 #[derive(Debug)]
 pub struct ExprTerm {
-    expr: (ExprVal, ExprVal),
+    expr: Vec<ExprVal>,
 }
 
 /// This struct represents the evaluation of multiple expression terms, and'ed together.
@@ -98,12 +99,12 @@ impl Evaluable<i64> for ExprVal {
 
 impl Evaluable<&Vec<i64>> for ExprTerm {
     fn new(input: &Vec<i64>) -> Self {
-        let expr = (ExprVal::new(input[0]), ExprVal::new(input[1]));
+        let expr = vec![ExprVal::new(input[0]), ExprVal::new(input[1])];
         ExprTerm { expr }
     }
 
     fn eval(&self, input: &BitVec) -> bool {
-        let (a, b) = &self.expr;
+        let (a, b) = (&self.expr[0], &self.expr[1]);
         a.eval(input) | b.eval(input)
     }
 }
@@ -117,5 +118,44 @@ impl Evaluable<&Vec<Vec<i64>>> for ExprFull {
     fn eval(&self, input: &BitVec) -> bool {
         let result = self.expr.iter().find(|e| !e.eval(input));
         result.is_none()
+    }
+}
+
+pub trait Satisfiable<T>: Evaluable<T> {
+    fn satisfy_term_randomly(&self, input: &mut BitVec) -> ();
+}
+
+impl Satisfiable<i64> for ExprVal {
+    fn satisfy_term_randomly(&self, input: &mut BitVec) -> () {
+        if !self.eval(input) {
+            let index = abs(self.expr) as usize;
+            let value = input.is_set(index);
+            if value {
+                input.clear(index)
+            } else {
+                input.set(index)
+            }
+        }
+    }
+}
+
+impl Satisfiable<&Vec<i64>> for ExprTerm {
+    fn satisfy_term_randomly(&self, input: &mut BitVec) -> () {
+        if !self.eval(input) {
+            let mut rng = rand::thread_rng();
+            let satisfiable_expr = &self.expr.choose(&mut rng).unwrap();
+            satisfiable_expr.satisfy_term_randomly(input);
+        }
+    }
+}
+
+impl Satisfiable<&Vec<Vec<i64>>> for ExprFull {
+    fn satisfy_term_randomly(&self, input: &mut BitVec) -> () {
+        if !self.eval(input) {
+            let mut rng = rand::thread_rng();
+            let unsatisfied = self.expr.iter().filter(|e| !e.eval(input));
+            let satisfiable_expr = unsatisfied.choose(&mut rng).unwrap();
+            satisfiable_expr.satisfy_term_randomly(input);
+        }
     }
 }
