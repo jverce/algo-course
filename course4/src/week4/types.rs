@@ -116,9 +116,6 @@ impl Evaluable<&Vec<Vec<i64>>> for ExprFull {
 
     fn eval(&self, input: &BitVec) -> bool {
         let result = self.expr.iter().find(|e| !e.eval(input));
-        match result {
-            Some(_) => false,
-            None => true,
-        }
+        result.is_none()
     }
 }
